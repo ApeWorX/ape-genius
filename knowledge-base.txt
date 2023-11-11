@@ -1,0 +1,5190 @@
+######## ./docs\docs-readme.md
+
+# Overview
+
+**Ape Framework** is an easy-to-use Web3 development tool.
+Users can compile, test, and interact with smart contracts all in one command line session.
+With our **modular plugin system**, Ape supports multiple contract languages and chains.
+
+Ape is built by [ApeWorX LTD](https://www.apeworx.io/).
+
+Join our [ApeWorX Discord server](https://discord.gg/apeworx) to stay up to date on new releases, plugins and tutorials.
+
+If you want to just get started, jump down to the [Playing with Ape](#playing-with-ape).
+
+## Documentation
+
+Read our [technical documentation](https://docs.apeworx.io/ape/stable/) to get a deeper understanding of our open source Framework.
+
+Read our [academic platform](https://academy.apeworx.io/) will help you master Ape Framework with tutorials and challenges.
+
+## Prerequisite
+
+In the latest release, Ape requires:
+
+- Linux or macOS
+- Python 3.8 up to 3.11
+- **Windows**: Install Windows Subsystem Linux [(WSL)](https://docs.microsoft.com/en-us/windows/wsl/install)
+
+Check your python version in a terminal with `python3 --version`.
+
+## Installation
+
+There are three ways to install ape: `pipx`, `pip`, or `Docker`.
+
+### Considerations for Installing:
+
+- If using `pip`, we advise using the most up-to-date version of `pip` to increase the chance of a successful installation.
+
+  - See issue https://github.com/ApeWorX/ape/issues/1558.
+  - To upgrade `pip` from the command line, run: `pip install --upgrade pip`.
+
+- We advise installing in a [virtualenv](https://pypi.org/project/virtualenv/) or [venv](https://docs.python.org/3/library/venv.html) to avoid interfering with *OS-level site packages*.
+
+- We advise installing **`ape`** with recommended plugins `pip install eth-ape'[recommended-plugins]'`.
+
+- We advise for **macOS** users to install virtual env via [homebrew](https://formulae.brew.sh/formula/virtualenv).
+
+### via `pipx` or `pip`
+
+1. Install `pipx` via their [installation instructions](https://pypa.github.io/pipx/) or `pip` via their [installation instructions](https://pip.pypa.io/en/stable/cli/pip_install/).
+
+2. Install **`ape`** via `pipx install eth-ape` or `pip install eth-ape`.
+
+### via `docker`
+
+Ape can also run in a docker container.
+
+Please visit our [Dockerhub](https://hub.docker.com/repository/docker/apeworx/ape) for more details on using Ape with Docker.
+
+```bash
+docker run \
+--volume $HOME/.ape:/home/harambe/.ape \
+--volume $HOME/.vvm:/home/harambe/.vvm \
+--volume $HOME/.solcx:/home/harambe/.solcx \
+--volume $PWD:/home/harambe/project \
+apeworx/ape compile
+```
+
+## Playing with Ape
+
+After you installed Ape, you can run `ape --version` to make sure it works and is the latest version.
+
+There are two ways to interact with Ape:
+
+- [CLI Reference](https://docs.apeworx.io/ape/latest/index.html)
+
+- [Python Reference](https://docs.apeworx.io/ape/latest/index.html)
+
+Ape is both a CLI tool and a Python SDK.
+
+The CLI tool contains all the Ape commands and the Python SDK contains the classes and types needed to compose scripts, console actions, and tests.
+
+## **Ape Modular Plugin System:**
+
+Our [list of plugins](https://www.apeworx.io/#plugins) is the best way to have the most interoperable experience with Web3.
+
+**NOTE**: If a plugin does not originate from the [ApeWorX GitHub Organization](https://github.com/ApeWorX?q=ape&type=all), you will get a warning about installing 3rd-party plugins.
+
+Install 3rd party plugins at your own risk.
+
+Additionally, plugins that come bundled with **`ape`** in the core installation cannot be removed and are part of the **`ape`** core software.
+
+- Learn more about **installing** plugins from following this [installing user guide](https://docs.apeworx.io/ape/stable/userguides/installing_plugins.html).
+
+- Learn more about **developing** your own plugins from this [developing user guide](https://docs.apeworx.io/ape/stable/userguides/developing_plugins.html).
+
+### Accounts
+
+In Ape, you will need accounts to make transactions.
+You can import or generate accounts using the core `accounts` plugin:
+
+```bash
+ape accounts import acc0   # Will prompt for a private key
+ape accounts generate acc1
+```
+
+List all your accounts with the `list` command.
+
+```bash
+ape accounts list
+```
+
+Learn more about accounts in Ape by following the [accounts guide](https://docs.apeworx.io/ape/stable/userguides/accounts.html).
+
+### Plugins
+
+Add any plugins you may need, such as `vyper`.
+
+```bash
+ape plugins list -a
+ape plugins install vyper
+ape plugins list -a
+```
+
+## Projects
+
+When using Ape, you generally will work with a project.
+
+Learn more about smart-contract **projects** from this [projects guide](https://docs.apeworx.io/ape/stable/userguides/projects.html).
+
+### Compiling
+
+You can compile contracts within the `contracts/` directory of your project.
+The `--size` option will display you the size of the contract.
+
+```bash
+ape compile --size
+```
+
+Learn more about compiling in Ape by following the [compile guide](https://docs.apeworx.io/ape/stable/userguides/compile.html).
+
+### Testing
+
+Use Ape to test your smart-contract projects.
+Provide the same arguments to `pytest` as you would to the `ape test` command.
+
+For example:
+
+```bash
+ape test -k test_only_one_thing
+```
+
+Visit the [testing guide](https://docs.apeworx.io/ape/stable/userguides/testing.html) to learn more about testing using Ape.
+
+### Console
+
+Ape provides an `IPython` interactive console with useful pre-defined locals to interact with your project.
+To interact with a deployed contract in a local environment, start by opening the console:
+
+```bash
+ape console --network ethereum:mainnet:infura
+```
+
+Visit [Ape Console](https://docs.apeworx.io/ape/stable/commands/console.html) to learn how to use Ape Console.
+
+### Scripts
+
+If you want to run specific files in a `scripts/` directory, you can do it using the `ape run` command.
+
+```bash
+# This command will run a file named deploy in the scripts/ directory
+$ ape run deploy
+```
+
+Learn more about scripting using Ape by following the [scripting guide](https://docs.apeworx.io/ape/stable/userguides/scripts.html).
+
+### Logging
+
+To enable debug logging, run your command with the `--verbosity` flag using `DEBUG` as the value:
+
+```bash
+ape --verbosity DEBUG run
+```
+
+### Networks
+
+You can work with registered networks, providers, and blockchain ecosystems (like Ethereum):
+
+```python
+from ape import networks
+with networks.ethereum.mainnet.use_provider("infura"):
+    ...  # Work with the infura provider here
+```
+
+To learn more about networks in Ape, see [this guide](https://docs.apeworx.io/ape/stable/commands/networks.html).
+
+######## ./docs\docs-userguide-account.md
+
+# Accounts
+
+Accounts in Ape come from [AccountAPI](../methoddocs/api.html#ape.api.accounts.AccountAPI) implementations (e.g. from plugins).
+There are typically two types of accounts:
+
+1. Test accounts
+2. Live network accounts
+
+Test accounts are useful for local network testing and debugging contracts.
+Live network accounts are for interacting with live blockchains and should be secured.
+
+To learn more about Ethereum accounts, see [the Ethereum documentation](https://ethereum.org/en/developers/docs/accounts/).
+
+## Test Accounts
+
+Ape ships with pytest fixtures to assist in writing your tests.
+Pre-funded test accounts are accessible via the [accounts fixture](./testing.html#accounts-fixture).
+
+```python
+def test_my_contract_method(accounts):
+    sender = accounts[0]
+    ...
+```
+
+To access the same prefunded accounts in your scripts or console, use the root `accounts` object and the [test_accounts](../methoddocs/managers.html#ape.managers.accounts.AccountManager.test_accounts) property:
+
+```python
+from ape import accounts
+
+sender = accounts.test_accounts[0]
+```
+
+You can configure your test accounts using your `ape-config.yaml` file:
+
+```yaml
+test:
+  mnemonic: test test test test test test test test test test test junk
+  number_of_accounts: 5
+```
+
+**WARN**: NEVER put a seed phrase with real funds here.
+The accounts generated from this seed are solely for testing and debugging purposes.
+
+You can create a new test account by doing the following:
+
+```python
+account = accounts.test_accounts.generate_test_account()
+```
+
+**NOTE**: Creating a new test account means it will be unfunded by default.
+
+Learn more about test accounts from the [testing guide](./testing.html#accounts-fixture).
+
+If your testing provider supports this feature, it is possible to directly set the balances of any address by performing the following action:
+
+```python
+account.balance += int(1e18)  # Gives `account` 1 Ether
+```
+
+### Default Sender Support
+
+In order to eliminate the usage of sender in contract calls, you can use `use_sender` context manager.
+
+```python
+with accounts.use_sender(0): # Use first account from test mnemonic
+  contract.myFunction(1)
+
+with accounts.use_sender("<address>"): # Impersonate an account
+  contract.myFunction(1)
+
+with accounts.use_sender(a): # a is a `TestAccountAPI` object
+  contract.myFunction(1)
+```
+
+## Live Network Accounts
+
+When using live networks, you need to get your accounts into Ape.
+Ape ships with a keyfile accounts plugin to assist with this.
+All the available CLI commands for this accounts plugin can be found [here](../commands/accounts.html).
+
+For example, you can [generate](../commands/accounts.html#accounts-generate) an account:
+
+```bash
+ape accounts generate <ALIAS>
+```
+
+Ape will prompt you for entropy which is used to increase randomness when creating your account.
+
+Ape will then prompt you whether you want to show your mnemonic.
+
+If you do not want to see your mnemonic you can select `n`.
+
+Alternatively you can use the `--hide-mnemonic` option to skip the prompt.
+
+```bash
+ape accounts generate <ALIAS> --hide-mnemonic
+```
+
+If you elected to show your mnemonic Ape will then show you your newly generated mnemonic.
+
+Ape will then prompt you for a passphrase which you will need to enter twice to confirm.
+
+This passphrase is used to encrypt your account on disk, for extra security.
+
+You will be prompted for it each time you load your account, so make sure to remember it.
+
+After entering the passphrase Ape will then show you your new account address, HDPath, and account alias.
+
+If you want to use a custom HDPath, use the `--hd-path` option:
+
+```bash
+ape accounts generate <ALIAS> --hd-path <HDPATH>
+```
+
+If you do not use the `--hd-path` option, Ape will use the default HDPath of (Ethereum network, first account).
+
+If you want to use a custom mnemonic phrase word length, use the `--word-count` option:
+
+```bash
+ape accounts generate <ALIAS> --word-count <WORDCOUNT>
+```
+
+If you do not use the `--word-count` option, Ape will use the default word count of 12.
+
+You can use all of these together or separately to control the way Ape creates and displays your account information.
+
+If you already have an account and you wish to import it into Ape (say, from Metamask), you can use the [import command](../commands/accounts.html#accounts-import):
+
+```bash
+ape accounts import <ALIAS>
+```
+
+It will prompt you for the private key.
+
+If you need help exporting your private key from Metamask, see [this guide](https://metamask.zendesk.com/hc/en-us/articles/360015289632-How-to-export-an-account-s-private-key).
+
+You can also import accounts from mnemonic seed by using the `--use-mnemonic` flag:
+
+```bash
+ape accounts import <ALIAS> --use-mnemonic
+```
+
+It will then prompt you for the [mnemonic seed](https://en.bitcoin.it/wiki/Seed_phrase).
+
+If you need help finding your mnemonic seed (Secret Recovery Phrase) in Metamask, see [this guide](https://metamask.zendesk.com/hc/en-us/articles/360015290032-How-to-reveal-your-Secret-Recovery-Phrase).
+
+In addition, you can also use a custom HDPath by using the `--hd-path` option:
+
+```bash
+ape accounts import <ALIAS> --use-mnemonic --hd-path <HDPATH>
+```
+
+If you use the `--hd-path` option, you will need to pass the [HDPath](https://help.myetherwallet.com/en/articles/5867305-hd-wallets-and-derivation-paths) you'd like to use as an argument in the command.
+
+If you do not use the `--hd-path` option, Ape will use the default HDPath of (Ethereum network, first account).
+
+You can also [export](../commands/accounts.html#accounts-export) the private key of an account:
+
+```bash
+ape accounts export <ALIAS>
+```
+
+Ape will ask you for the password to the account and then give you the private key of that account.
+
+You can then use that private key with [import](../commands/accounts.html#accounts-import).
+
+You can alternatively load the private key into [Metamask wallet](https://metamask.zendesk.com/hc/en-us/articles/360015489331-How-to-import-an-account#h_01G01W07NV7Q94M7P1EBD5BYM4).
+
+Then, in your scripts, you can [load](../methoddocs/managers.html#ape.managers.accounts.AccountManager.load) an account:
+
+```python
+from ape import accounts
+
+account = accounts.load("<ALIAS>")
+```
+
+### Default Sender Support
+
+In order to reduce repetition of adding `sender` in your contract calls, you can use `use_sender` context manager.
+
+```python
+with accounts.use_sender(0):
+  contract.myFunction(1)
+
+with accounts.use_sender("<address>"):
+  contract.myFunction(1)
+
+with accounts.use_sender("<alias>"):
+  contract.myFunction(1)
+
+with accounts.use_sender(a): # a is a `AccountAPI` object
+  contract.myFunction(1)
+```
+
+## Automation
+
+If you use your keyfile accounts in automation, such as CI/CD, you may need to programmatically unlock them and enable autosign.
+**WARNING**: We don't recommend using this approach but it is possible due to sometimes being needed.
+Ensure you are using a secure environment and are aware of what you are doing.
+
+```python
+from ape import accounts
+from eth_account.messages import encode_defunct
+
+account = accounts.load("<ALIAS>")
+account.set_autosign(True, passphrase="<PASSPHRASE>")
+
+# Now, you will not be prompted to sign messages or transactions
+message = encode_defunct(text="Hello Apes!")
+signature = account.sign_message(message)
+```
+
+## Keyfile Passphrase Environment Variable (more secure)
+
+Another, more secure approach is to use an environment variable.
+Set your passphrase in an environment variable by following this template:
+
+```bash
+export APE_ACCOUNTS_<alias>_PASSPHRASE="a"
+```
+
+Where `<alias>` is the name of the account you want to use.
+Now, you can use your account to make any transactions without subsequently providing your passphrase.
+
+```py
+from ape import accounts
+from eth_account.messages import encode_defunct
+
+account = accounts.load("<ALIAS>")
+account.set_autosign(True)
+
+# Now, you will not be prompted to sign messages or transactions
+message = encode_defunct(text="Hello Apes!")
+signature = account.sign_message(message)
+```
+
+## Hardware Wallets
+
+Because of the plugin system in Ape, we are able to support other types of accounts including hardware wallet accounts.
+Check out these plugins:
+
+- [ape-ledger](https://github.com/ApeWorX/ape-ledger)
+- [ape-trezor](https://github.com/ApeWorX/ape-trezor)
+
+To install one of these plugins, do the following:
+
+```bash
+ape plugins install ledger
+```
+
+######## ./docs\docs-userguide-clis.md
+
+# CLIs
+
+Ape uses the [click framework](https://click.palletsprojects.com/en/8.1.x/) for handling all CLI functionality.
+There are CLIs found in a couple areas in the Ape framework:
+
+1. Plugins
+2. Scripts
+
+Both plugins and scripts utilize `click` for their CLIs.
+
+For plugins, CLIs are an option for extending the framework.
+You can read more about plugin development and CLIs in the [developing plugins guide](./developing_plugins.html).
+
+Scripts utilize CLIs as an option for users to develop their scripts.
+You can read more about scripting and CLIs in the [scripting guide](./scripts.html).
+
+This guide is for showcasing utilities that ship with Ape to assist in your CLI development endeavors.
+
+## Ape Context Decorator
+
+The `@ape_cli_context` gives you access to all the root Ape objects (`accounts`, `networks` etc.), the ape logger, and an `abort` method for stopping execution of your CLI gracefully.
+Here is an example using all of those features from the `cli_ctx`:
+
+```python
+import click
+from ape.cli import ape_cli_context
+
+
+@click.command()
+@ape_cli_context()
+def cmd(cli_ctx):
+    cli_ctx.logger.info("Test")
+    account = cli_ctx.account_manager.load("metamask")
+    cli_ctx.abort(f"Bad account: {account.address}")
+```
+
+## Network Tools
+
+The `@network_option()` allows you to select an ecosystem / network / provider combination.
+When using with the `NetworkBoundCommand` cls, you can cause your CLI to connect before any of your code executes.
+This is useful if your script or command requires a provider connection in order for it to run.
+
+```python
+import click
+from ape import networks
+from ape.cli import network_option, NetworkBoundCommand
+
+
+@click.command()
+@network_option()
+def cmd(network):
+    # Choices like "ethereum" or "polygon:local:test".
+    click.echo(network)
+
+
+@click.command(cls=NetworkBoundCommand)
+@network_option()
+def cmd(network):
+    # Fails if we are not connected.
+    click.echo(networks.provider.network.name)
+```
+
+## Account Tools
+
+Use the `@account_option()` for adding an option to your CLIs to select an account.
+This option does several things:
+
+1. If you only have a single account in Ape (from both test accounts _and_ other accounts), it will use that account as the default.
+   (this case is rare, as most people have more than one test account by default).
+2. If you have more than one account, it will prompt you to select the account to use.
+3. You can pass in an account alias or index to the option flag to have it use that account.
+4. It allows you to specify test accounts by using a choice of `TEST::{index_of_test_account}`.
+
+Thus, if you use this option, no matter what, your script will have an account to use by the time the script starts.
+Here is an example:
+
+```python
+import click
+from ape.cli import account_option
+
+
+@click.command()
+@account_option()
+def cmd(account):
+    # Will prompt the user to select an account if needed.
+    click.echo(account.alias)
+```
+
+And when invoking the command from the CLI, it would look like the following:
+(where `<prefix>` is either `ape run` for scripts or `ape <custom-plugin-cmd>` for plugins)
+
+```shell
+<prefix> cmd  # Use the default account.
+<prefix> cmd --account 0  # Use first account that would show up in `get_user_selected_account()`.
+<prefix> cmd --account metamask  # Use account with alias "metamask".
+<prefix> cmd --account TEST::0  # Use the test account at index 0.
+```
+
+Alternatively, you can call the `get_user_selected_account()` directly to have more control of when the account gets selected:
+
+```python
+import click
+from ape.cli import get_user_selected_account
+
+
+@click.command()
+def cmd():
+    account = get_user_selected_account("Select an account to use")
+    click.echo(f"You selected {account.address}.")
+```
+
+Similarly, there are a couple custom arguments for aliases alone that are useful when making CLIs for account creation.
+If you use `@existing_alias_argument()` and specify an alias does not already exist, it will error.
+And visa-versa when using `@non_existing_alias_argument()`
+
+```python
+import click
+from ape.cli import existing_alias_argument, non_existing_alias_argument
+
+
+@click.command()
+@existing_alias_argument()
+def delete_account(alias):
+    # We know the alias is an existing account at this point.
+    click.echo(alias)
+
+
+@click.command()
+@non_existing_alias_argument()
+def create_account(alias):
+    # We know the alias is not yet used in Ape at this point.
+    click.echo(alias)
+```
+
+######## ./docs\docs-userguide-compile.md
+
+# Compile
+
+Compile your project using the following command:
+
+```bash
+ape compile
+```
+
+Configure the location Ape looks for contracts by editing the `contracts_folder` key in your project's `ape-config.yaml` file:
+
+```yaml
+contracts_folder: src  # Default is 'contracts/'
+```
+
+## The JSON Compiler
+
+Ape ships with a compiler that is able to compile `.json` files.
+This compiler is useful for the following:
+
+1. **Interfaces**: If you know the address of an existing contract, you can include its ABI in your project and create a contract wrapper around it:
+
+```python
+from ape import project
+
+# Comes from a file named `MyInterface.json` in the contracts/ folder.
+my_interface = project.MyInterface
+address = "0x1234556b5Ed9202110D7Ecd637A4581db8b9879F"
+
+# Instantiate a deployed contract using the local interface.
+contract = my_interface.at(address)
+
+# Call a method named `my_method` found in the local contract ABI.
+contract.my_method()
+```
+
+2. **Pre-existing Contract Types**: If you have a contract type JSON that was compiled elsewhere, you can include it in your project.
+   This is useful if you are unable or unwilling to install a compiler.
+
+3. **Raw Compiler Output**: If you have an artifact with binary compiled elsewhere, you can include it in your project.
+   This is useful if you want to use contracts from much larger projects as dependency for your test cases.
+
+**WARN**: You may have to adjust name and source ID similarly to raw contract-type output.
+
+## Other Compiler Plugins
+
+If your project includes Solidity (`.sol`) or Vyper (`.vy`) files, you will have to install additional compilers.
+To include additional compilers in your project, you can add the plugins to the `plugins` list in your `ape-config.yaml` or install them using the CLI.
+For information on how to configure plugins in your project, follow [this guide](./installing_plugins.html).
+
+## Ignore Files
+
+You can configure files to be ignored from compilation.
+By default, Ape ignores files `package.json`, `package-lock.json`, `tsconfig.json`.
+To override this list, edit your `ape-config.yaml` similarly:
+
+```yaml
+compiler:
+  ignore_files:
+    - "*package.json"
+    - "*package-lock.json"
+    - "*tsconfig.json"
+    - "*custom.json"  # Append a custom ignore
+```
+
+**NOTE**: You must include the defaults in the list when overriding if you wish to retain them.
+
+## Dependencies
+
+In Ape, compiler plugins typically let you have dependencies.
+See [this guide](./dependencies.html) to learn more about configuring dependencies in Ape.
+
+To always compile dependencies in Ape during the `ape compile` command, use the CLI flag `--include-dependencies`:
+
+```shell
+ape compile --include-dependencies
+```
+
+Alternatively, configure it to always happen:
+
+```yaml
+compile:
+  use_dependencies: true
+```
+
+######## ./docs\docs-userguide-config.md
+
+# Configure Ape
+
+You can configure Ape using configuration files with the name `ape-config.yaml`.
+There are two locations you can place an `ape-config.yaml` file.
+
+1. In the root of your project
+2. In your `$HOME/.ape` directory (global)
+
+Project settings take precedent, but global settings allow you to configure preferences across all projects, such as your default mainnet provider (e.g. Alchemy versus running your own node).
+
+This guide serves as an index of the settings you can include in any `ape-config.yaml` file.
+
+## Contracts Folder
+
+Specify a different path to your `contracts/` directory.
+This is useful when using a different naming convention, such as `src/` rather than `contracts/`.
+
+```yaml
+contracts_folder: src
+```
+
+You can also use an absolute path.
+This is useful for projects that compile contracts outside their directory.
+
+```yaml
+contracts_folder: "~/GlobalContracts"
+```
+
+## Default Ecosystem
+
+You can change the default ecosystem by including the following:
+
+```yaml
+default_ecosystem: fantom
+```
+
+The default ecosystem is `ethereum`.
+
+## Dependencies
+
+Configure dependencies for your ape project.
+To learn more about dependencies, see [this guide](./dependencies.html).
+
+A simple example of configuring dependencies looks like this:
+
+```yaml
+dependencies:
+  - name: OpenZeppelin
+    github: OpenZeppelin/openzeppelin-contracts
+    version: 4.4.2
+```
+
+## Deployments
+
+Share import deployments to public networks with your teammates:
+
+```yaml
+deployments:
+  ethereum:
+    mainnet:
+      - contract_type: MyContract
+        address: 0xc123aAacCcbBbaAa444777000111222111222111
+    ropsten:
+      - contract_type: MyContract
+        address: 0xc222000cCcbBbaAa444777000111222111222222
+```
+
+## Geth
+
+When using the `geth` provider, you can customize its settings.
+For example, to change the URI for an Ethereum network, do:
+
+```yaml
+geth:
+  ethereum:
+    mainnet:
+      uri: http://localhost:5030
+```
+
+## Networks
+
+Set default network and network providers:
+
+```yaml
+ethereum:
+  default_network: mainnet-fork
+  mainnet_fork:
+    default_provider: hardhat
+```
+
+Set the gas limit for a given network:
+
+```yaml
+ethereum:
+  default_network: mainnet-fork
+  mainnet_fork:
+    gas_limit: max
+```
+
+You may use one of:
+
+- `"auto"` - gas limit is estimated for each transaction
+- `"max"` - the maximum block gas limit is used
+- A number or numeric string, base 10 or 16 (e.g. `1234`, `"1234"`, `0x1234`, `"0x1234"`)
+- An object with key `"auto"` for specifying an estimate-multiplier for transaction insurance
+
+To use the auto-multiplier, make your config like this:
+
+```yaml
+ethereum:
+  mainnet:
+    gas_limit:
+      auto:
+        multiplier: 1.2  # Multiply 1.2 times the result of eth_estimateGas
+```
+
+For the local network configuration, the default is `"max"`. Otherwise, it is `"auto"`.
+
+## Plugins
+
+Set which `ape` plugins you want to always use.
+
+**NOTE**: The `ape-` prefix is not needed and shouldn't be included here.
+
+```yaml
+plugins:
+  - name: solidity # ape-solidity plugin
+    version: 0.1.0b2
+  - name: ens
+```
+
+Install these plugins by running command:
+
+```bash
+ape plugins install
+```
+
+## Testing
+
+Configure your test accounts:
+
+```yaml
+test:
+  mnemonic: test test test test test test test test test test test junk
+  number_of_accounts: 5
+```
+
+
+######## ./docs\docs-userguide-console.md
+
+# Ape Console
+
+Ape provides an [IPython](https://ipython.readthedocs.io/) interactive console with useful pre-defined locals to interact with your project.
+
+```bash
+ape console --network ethereum:mainnet
+
+In [1]: chain.blocks.head.timestamp
+Out[1]: 1647323479
+```
+
+WARNING: Contract changes are not reflected in the active console session.
+If you need to make changes to your contract, you must re-start your console session for the compiler to handle the changes.
+
+## Ape Namespace
+
+Your console comes with pre-initialized root ape objects in your namespace.
+
+|    Name    |                                                   Class                                                    |
+| :--------: | :--------------------------------------------------------------------------------------------------------: |
+| `accounts` |       [AccountManager](../methoddocs/managers.html?highlight=accounts#module-ape.managers.accounts)        |
+| `networks` |       [NetworkManager](../methoddocs/managers.html?highlight=networks#module-ape.managers.networks)        |
+|  `chain`   |           [ChainManager](../methoddocs/managers.html?highlight=chain#module-ape.managers.chain)            |
+| `project`  |    [ProjectManager](../methoddocs/managers.html?highlight=project#module-ape.managers.project.manager)     |
+|  `query`   |           [QueryManager](../methoddocs/managers.html?highlight=query#module-ape.managers.query)            |
+| `convert`  | [convert](../methoddocs/managers.html?highlight=query#ape.managers.converters.AddressAPIConverter.convert) |
+|   `ape`    |                                       [ape](../methoddocs/ape.html)                                        |
+
+You can access them as if they are already initialized:
+
+First, launch the console:
+
+```bash
+ape console
+```
+
+Then, type the name of the item and you will see its Python representation:
+
+```python
+In [1]: networks
+Out[1]: <NetworkManager active_provider=<test chain_id=61>>
+```
+
+**NOTE**: To change the network of the active console, use the `--network` option.
+Follow [this guide](./networks.html) for more information on networks in Ape.
+
+## Namespace Extras
+
+You can also create scripts to be included in the console namespace by adding a file (`ape_console_extras.py`) to your root project directory.  All non-internal symbols from this file will be included in the console namespace.  Internal symbols are prefixed by an underscore (`_`).
+
+An example file might look something like this:
+
+```python
+from eth_utils import encode_hex, decode_hex
+
+
+def latest(key):
+    return getattr(networks.active_provider.get_block("latest"), key)
+```
+
+Then both imported util functions and `WETH_ADDRESS` will be available when you launch the console.
+
+```python
+In [1]: latest('number')
+Out[1]: 14388241
+
+In [2]: encode_hex(latest('hash'))
+Out[2]: '0x68f768988e9bd4be971d527f72483f321975fa52aff9692b6d0e0af71fb77aaf'
+```
+
+### Init Function
+
+If you include a function named `ape_init_extras`, it will be executed with the symbols from the existing namespace being provided as keyword arguments.  This allows you to alter the scripts namespace using locals already included in the Ape namespace.  If you return a `dict`, these values will be added to the console namespace.  For example, you could set up an initialized Web3.py object by using one from an existing Ape Provider.
+
+```python
+def ape_init_extras(chain):
+    return {"web3": chain.provider._web3}
+```
+
+Then `web3` will be available to use immediately.
+
+```python
+In [1]: web3.eth.chain_id
+Out[1]: 1
+```
+
+### Global Extras
+
+You can also add an `ape_console_extras.py` file to the global ape data directory (`$HOME/.ape/ape_console_extras.py`) and it will execute regardless of what project context you are in.  This may be useful for variables and utility functions you use across all of your projects.
+
+## Configure
+
+To automatically use other IPython extensions, add them to your `ape-config.yaml` file:
+
+```yaml
+console:
+  plugins:
+    # A plugin that lets you modify Python modules without having close/reopen your console.
+    - autoreload
+```
+
+## Magic Commands
+
+The `ape-console` plugin ships with custom [magics](https://ipython.readthedocs.io/en/stable/interactive/magics.html#line-magics) that are available when running the `ape console` command or loading the `ape_console.plugin` IPython extension manually.
+When starting an embedded console (from `-I` in `ape run` or `ape test`), you will have to load the extension manually.
+To do this, run the following from _any_ `IPython` environment:
+
+```shell
+In [1]: %load_ext ape_console.plugin
+```
+
+Or add the `ape_console.plugin` extension to your `IPython` config.
+
+Otherwise, when launching `ape console`, the magics are automatically available.
+
+### %ape
+
+The `%ape` magic invokes the CLI in your `ape-console` session:
+
+```shell
+In [1]: %ape
+Usage: cli [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  -v, --verbosity LVL  One of ERROR, WARNING, SUCCESS, INFO, or DEBUG
+  --version            Show the version and exit.
+  --config             Show configuration options (using `ape-config.yaml`)
+  -h, --help           Show this message and exit.
+
+Commands:
+  accounts  Manage local accounts
+  cache     Query from caching database
+  compile   Compile select contract source files
+  console   Load the console
+  init      Initalize an ape project
+  networks  Manage networks
+  plugins   Manage ape plugins
+  run       Run scripts from the `scripts/` folder
+  test      Launches pytest and runs the tests for a project
+
+Out[1]: <Result okay>
+```
+
+Run any CLI command this way without exiting your session.
+
+### %bal
+
+The `%bal` magic outputs a human-readable balance on an account, contract, address, or account alias.
+
+```shell
+In [1]: account = accounts.load("metamask0")
+
+In [2]: %bal account
+Out[2]: '0.00040634 ETH'
+
+In [3]: %bal metamask0
+Out[3]: '0.00040634 ETH'
+
+In [4]: %bal 0xE3747e6341E0d3430e6Ea9e2346cdDCc2F8a4b5b
+Out[4]: '0.00040634 ETH'
+```
+
+
+######## ./docs\docs-userguide-contracts.md
+
+# Contracts
+
+You can interact with contracts pythonically using ape!
+First, we need to obtain a contract instance.
+One way to do this is to deploy a contract.
+The other way is to initialize an already-deployed contract using its address.
+
+## From Deploy
+
+Deploy contracts from your project using the `project` root-level object.
+The names of your contracts are properties on the `project` object (e.g. `project.MyContract`) and their types are [ContractContainer](../methoddocs/contracts.html#ape.contracts.base.ContractContainer).
+
+**NOTE**: To avoid naming collisions with other properties on the `project` object, you can also use the [get_contract()](../methoddocs/managers.html#ape.managers.project.manager.ProjectManager.get_contract) method to retrieve contract containers.
+
+When you deploy contracts, you get back a `ContractInstance`:
+
+```python
+from ape import accounts, project
+
+dev = accounts.load("dev")
+contract = project.MyContract.deploy(sender=dev)
+```
+
+You can alternatively use this syntax instead:
+
+```python
+from ape import accounts, project
+
+dev = accounts.load("dev")
+contract = dev.deploy(project.MyContract)
+```
+
+If your contract requires constructor arguments then you will need to pass them to the contract in the [args](./transactions.html) when deploying like this:
+
+```python
+from ape import accounts, project
+
+dev = accounts.load("dev")
+contract = project.MyContract.deploy("argument1", "argument2", sender=dev)
+```
+
+you can alternatively use this syntax instead:
+
+```python
+from ape import accounts, project
+
+dev = accounts.load("dev")
+contract = accounts.dev.deploy(project.MyContract, "argument1", "argument2")
+```
+
+With this technique, you can feed as many constructor arguments as your contract constructor requires.
+
+**NOTE**: You can also publish the contract source code to an explorer upon deployment using the `publish=` kwarg on the deploy methods.
+More information on publishing contracts can be found in [this guide](./publishing.html).
+
+If you do not pass the correct amount of constructor arguments when deploying, you will get an error showing your arguments don't match what is in the ABI:
+
+```bash
+ArgumentsLengthError: The number of the given arguments (0) do not match what is defined in the ABI (2).
+```
+
+In this case it is saying that you have fed 0 constructor arguments but the contract requires 2 constructor arguments to deploy.
+
+To show the arguments that your constructor requires you can use the .constructor method to see the constructor arguments that your contract requires:
+
+```python
+In [0]: project.MyContract.constructor
+Out[0]: constructor(string argument1, string argument2)
+```
+
+## From Project Contract Address
+
+You can also use the [at() method](../methoddocs/contracts.html#ape.contracts.base.ContractContainer.at) from the same top-level project manager when you know the address of an already-deployed contract:
+
+```python
+from ape import project
+
+contract = project.MyContract.at("0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45")
+```
+
+## From Any Address
+
+If you already know the address of a contract, you can create instances of it using the `Contract` top-level factory:
+
+```python
+from ape import Contract
+
+contract = Contract("0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45")
+```
+
+It will fetch the `contract-type` using the explorer plugin from the active network, such as [ape-etherscan](https://github.com/ApeWorX/ape-etherscan).
+
+If you have the [ENS plugin](https://github.com/ApeWorX/ape-ens) installed, you can use `.eth` domain names as the argument:
+
+```python
+from ape import Contract
+
+contract = Contract("v2.registry.ychad.eth")
+```
+
+## From Previous Deployment
+
+Ape keeps track of your deployments for you so you can always refer back to a version that you deployed previously.
+On live networks, this history of deployments is saved; on local networks, this history lasts for the duration of your script.
+
+Let's say you previously deployed a smart contract called `MyContract` on the rinkeby test network.
+You could then refer back to it like so:
+
+```python
+from ape import project, chain, accounts
+
+def main():
+  account = accounts.test_accounts[0]
+  my_contract = chain.contracts.get_deployments(project.MyContract)[-1]
+```
+
+or
+
+```python
+from ape import project, accounts
+
+def main():
+  account = accounts.test_accounts[0]
+  my_contract = project.MyContract.deployments[-1]
+```
+
+`my_contract` will be of type `ContractInstance`.
+`get_deployments` returns a list of deployments you made of that contract type.
+
+## Contract Interaction
+
+Then, after you have a contract instance, you can call methods on the contract.
+For example, let's say you have a Vyper contract containing some functions:
+
+```python
+@pure
+@external
+def get_static_list() -> DynArray[uint256, 3]:
+    return [1, 2, 3]
+
+@external
+def set_number(num: uint256):
+    assert msg.sender == self.owner, "!authorized"
+    self.prevNumber = self.myNumber
+    self.myNumber = num
+```
+
+You can call those functions by doing:
+
+```python
+assert contract.get_static_list() == [1, 2, 3]
+
+# Mutable calls are transactions and require a sender
+receipt = contract.set_number(sender=dev)
+```
+
+### Default, Fallback, and Direct Calls
+
+To directly call an address, such as invoking a contract's `fallback` or `receive` method, call a contract instance directly:
+
+```python
+from ape import Contract, accounts
+
+sender = accounts.load("dev")
+contract = Contract("0x123...")
+
+# Call the contract's fallback method.
+receipt = contract(sender=sender, gas=40000, data="0x123")
+```
+
+### Private Transactions
+
+If you are using a provider that allows private mempool transactions, you are able to use the `private=True` kwarg to publish your transaction into a private mempool.
+For example, EVM providers likely will use the `eth_sendPrivateTransaction` RPC to achieve this.
+
+To send a private transaction, do the following:
+
+```python
+receipt = contract.set_number(sender=dev, private=True)
+```
+
+The `private=True` is available on all contract interactions.
+
+## Decoding and Encoding Inputs
+
+If you want to separately decode and encode inputs without sending a transaction or making a call, you can achieve this with Ape.
+If you know the method you want to use when decoding or encoding, you can call methods `encode_input()` or `decode_input()` on the method handler from a contract:
+
+```python
+from ape import Contract
+
+# HexBytes(0x3fb5c1cb00000000000000000000000000000000000000000000000000000000000000de)
+contract = Contract("0x...")
+bytes_value = contract.my_method.encode_input(0, 1, 2)
+```
+
+In the example above, the bytes value returned contains the method ID selector prefix `3fb5c1c`.
+Alternatively, you can decode input:
+
+```python
+from ethpm_types import HexBytes
+from ape import Contract
+
+contract = Contract("0x...")
+selector_str, input_dict = contract.my_method.decode_input(HexBytes("0x123..."))
+```
+
+In the example above, `selector_str` is the string version of the method ID, e.g. `my_method(unit256,uint256)`.
+The input dict is a mapping of input names to their decoded values, e.g `{"foo": 2, "owner": "0x123..."}`.
+If an input does not have a name, its key is its stringified input index.
+
+If you don't know the method's ABI and you have calldata, you can use a `ContractInstance` or `ContractContainer` directly:
+
+```python
+import ape
+
+# Fetch a contract
+contract = ape.Contract("0x...")
+
+# Alternative, use a contract container from ape.project
+# contract = ape.project.MyContract
+
+# Only works if unique amount of args.
+bytes_value = contract.encode_input(0, 1, 2, 4, 5)
+method_id, input_dict = contract.decode_input(bytes_value)
+```
+
+
+######## ./docs\docs-userguide-data.md
+
+# Querying Data
+
+Ape has advanced features for querying large amounts of on-chain data.
+Ape provides this support through a number of standardized methods for working with data,
+routed through our query management system, which incorporates data from many sources in
+your set of installed plugins.
+
+## Getting Block Data
+
+Use `ape console`:
+
+```bash
+ape console --network ethereum:mainnet:infura
+```
+
+Run a few queries:
+
+```python
+In [1]: df = chain.blocks.query("*", stop_block=20)
+In [2]: chain.blocks[-2].transactions  # List of transactions in block
+```
+
+## Getting Account Transaction Data
+
+Each account within ape will also fetch and store transactional data that you can query.
+To work with an account's transaction data, you can do stuff like this:
+
+```python
+In [1]: chain.history["example.eth"].query("value").sum()  # All value sent by this address
+In [2]: acct = accounts.load("my-acct"); acct.history[-1]  # Last txn `acct` made
+In [3]: acct.history.query("total_fees_paid").sum()  # Sum of ether paid for fees by `acct`
+```
+
+## Getting Contract Event Data
+
+On a deployed contract, you can query event history.
+
+For example, we have a contract with a `FooHappened` event that you want to query from.
+This is how you would query the args from an event:
+
+```python
+In [1]: df = contract_instance.FooHappened.query("*", start_block=-1)
+```
+
+where `contract_instance` is the return value of `owner.deploy(MyContract)`
+
+See [this guide](../userguides/contracts.html) for more information how to deploy or load contracts.
+
+## Using the Cache
+
+**Note**: This is in Beta release.
+This functionality is in constant development and many features are in planning stages.
+Use the cache plugin to store provider data in a sqlite database.
+
+To use the cache, first you must initialize it for each network you plan on caching data for:
+
+```bash
+ape cache init --network <ecosystem-name>:<network-name>
+```
+
+**Note**: Caching only works for permanently available networks. It will not work with local development networks.
+
+For example, to initialize the cache database for the Ethereum mainnet network, you would do the following:
+
+```bash
+ape cache init --network ethereum:mainnet
+```
+
+This creates a SQLite database file in ape's data folder inside your home directory.
+
+You can query the cache database directly, for debugging purposes.
+The cache database has the following tables:
+
+| Table Name        | Dataclass base |
+| ----------------- | -------------- |
+| `blocks`          | `BlockAPI`     |
+| `transactions`    | `ReceiptAPI`   |
+| `contract_events` | `ContractLog`  |
+
+
+######## ./docs\docs-userguide-dependencies.md
+
+# Dependencies
+
+Ape downloads and caches dependencies in the `.ape/packages/<name>/<version-id>` directory where `<name>` refers to the name of the dependency and `<version-id>` refers to the version or branch of the package.
+When first downloading dependencies, Ape only places the source contents in the `sources` field of the `PackageManifest` and leaves the `contract_types` field untouched.
+This is because dependencies may not compile by Ape's standard out-of-the-box but their contract types can still be used in projects that do.
+
+To use dependencies in your projects, you must configure them in your `ape-config.yaml` file.
+
+## Types of Dependencies
+
+There are few dependency types that come with Ape.
+The following section highlights how to use each of them and what their differences are.
+
+### GitHub
+
+You can use dependencies from GitHub.
+For example, a common dependency for Solidity projects is [Open Zeppelin](https://github.com/OpenZeppelin/openzeppelin-contracts).
+To use Open Zeppelin version 4.4.2 in your Ape Solidity project, add the following to your `ape-config.yaml` file:
+
+```yaml
+dependencies:
+  - name: OpenZeppelin
+    github: OpenZeppelin/openzeppelin-contracts
+    version: 4.4.2
+```
+
+Then, follow the guide below about `remappings` to use the dependency.
+
+**An important WARNING about the `version:` key for GitHub dependencies:**
+The `version:` config first attempts to use an official GitHub release, but if the release is not found, it will check the release tags.
+If you know the version is not available as an official release, bypass the original check by using the `ref:` key.
+The `ref:` key is also used for installing branches.
+
+For example, to install a version available as a `git` tag, do the following:
+
+```yaml
+dependencies:
+  - name: Uniswap
+    github: Uniswap/v3-core
+    ref: v1.0.0
+```
+
+The `ref:` config installs the code from that reference; the `version:` config uses the official GitHub release API, and then only if that fails will it check the `git` references.
+Often times, the `v` prefix is required when using tags.
+However, if cloning the tag fails, `ape` will retry with a `v` prefix.
+Bypass the original failing attempt by including a `v` in your dependency config.
+
+### Local
+
+You can use already-downloaded projects as dependencies by referencing them as local dependencies.
+
+```yaml
+dependencies:
+  - name: MyDependency
+    local: local/path/to/MyDependency
+    contracts_folder: src/contracts
+```
+
+This is helpful when:
+
+- Working on multiple packages at once.
+- When there is not a suitable `DependencyAPI` implementation available for downloading your dependency.
+- Testing the framework.
+
+### NPM
+
+You can use dependencies from NPM.
+This is generally not recommended.
+However, sometimes it is the only way to use a dependency.
+
+To use a dependency from NPM, you must have already run `npm install` and that package must be present in your local `node_modules` folder.
+Then, add the following to your config so that Ape can find the dependency:
+
+```yaml
+dependencies:
+  - name: MyDependency
+    npm: "@myorg/mydependency"
+    version: v1.3.0
+```
+
+## Package Management CLI
+
+You can also install and / or compile dependencies using the `pm` CLI.
+
+### list
+
+To list information about the dependencies in your local project, run:
+
+```shell
+ape pm list
+```
+
+To list information about all installed dependencies across all projects, run:
+
+```shell
+ape pm list --all
+```
+
+You should see information like:
+
+```shell
+Packages:
+  OpenZeppelin v4.6.0, compiled!
+  vault master
+  vault v0.4.5
+  gnosis v1.3.0
+```
+
+### install
+
+To install all dependencies in your project, run:
+
+```shell
+ape pm install
+```
+
+If the dependencies are already cached and you want to re-install them, use the `--force` flag:
+
+```shell
+ape pm install --force
+```
+
+To install a dependency that is not in your config, you can specify it directly along with `--name` and `--version`:
+
+```shell
+ape pm install gh:OpenZeppelin/openzeppelin-contracts --name openzeppelin --version "4.6.0"
+```
+
+**NOTE**: The `gh:` prefix is used because this dependency is from GitHub.
+For `npm` dependencies, you use an `npm:` prefix.
+For local dependencies, you give it a path to the local dependency.
+`--version` is not required when using a local dependency.
+
+### compile
+
+Dependencies are not compiled when they are installed.
+Dependencies are only compiled if you need them to be.
+This is because often times a dependency will not compile in Ape on its own but its contract types can still be used in your project.
+However, when working with dependency contracts directly, they will need to be compiled.
+Ape compiles them as soon as you request the contracts from them, so it generally happens on the backend automatically.
+**However**, you may want to recompile the dependencies, like when using a new compiler version or settings.
+You can use the CLI to recompile.
+
+```shell
+ape pm compile OpenZeppelin --version 4.6.0 --force
+```
+
+**NOTE**: You only need to specify a version if you have more than one version of a dependency installed.
+Otherwise, you just give it the name.
+
+To compile all dependencies in your local project, run the command with no arguments while in your project:
+
+```shell
+ape pm compile
+```
+
+Alternatively, you can compile dependencies along with your project's contracts by using the `--include-dependencies` flag in `ape-compile`:
+
+```shell
+ape compile --include-dependencies
+```
+
+## Misc
+
+The following guidelines are applicable to **ALL** dependency types.
+
+### Custom Contracts Folder
+
+You can set the name of the dependency's contracts folder, e.g.:
+
+```yaml
+dependencies:
+  - name: DappToolsERC20
+    github: dapphub/erc20
+    ref: dappnix
+    contracts_folder: src
+```
+
+### File Exclusions
+
+To ignore files from a dependency project, use the `exclude` setting to specify glob patterns:
+
+```yaml
+dependencies:
+  - name: dependency-project-name
+    github: org-name/dependency-project-name
+    exclude:
+      - package.json    # Ignore package.json files.
+      - mocks/**/*      # Ignore all files in the 'mocks' directory
+```
+
+### Config Override
+
+To use any extra config item for a dependency, such as configurations for compilers needed during compiling, use the `config_override` setting:
+
+```yaml
+dependencies:
+  - name: dependency
+    github: org-name/dependency-project-name
+    config_override:
+       solidity:
+         evm_version: paris
+```
+
+### Solidity Remappings
+
+A common use-case for dependencies involves the Solidity plugin.
+To use your dependencies in the `ape-solidity` plugin, configure `import_remappings` to refer to them:
+
+```yaml
+dependencies:
+  - name: OpenZeppelin
+    github: OpenZeppelin/openzeppelin-contracts
+    version: 4.4.2
+
+solidity: 
+  import_remapping:
+    - "@openzeppelin=OpenZeppelin/4.4.2"
+```
+
+Now, in your solidity files, import `OpenZeppelin` sources via:
+
+```solidity
+import "@openzeppelin/token/ERC721/ERC721.sol";
+```
+
+### Compiling Dependencies
+
+Sometimes, you may need to access types (such as contract types) from dependencies.
+You can achieve this using the project manager:
+
+```python
+from ape import accounts, project
+
+# NOTE: This will compile the dependency
+dependency_contract = project.dependencies["my_dependency"]["1.0.0"].DependencyContractType
+my_account = accounts.load("alias")
+deployed_contract = my_account.deploy(dependency_contract, "argument")
+print(deployed_contract.address)
+```
+
+If you would like to always compile dependencies during `ape compile` rather than only have them get compiled upon asking for contract types, you can use the config option `include_dependencies` from the `compile` config:
+
+```yaml
+compile:
+  include_dependencies: true
+```
+
+Alternatively, use the `--include-dependencies` CLI flag:
+
+```shell
+ape compile --include-dependencies
+```
+
+
+######## ./docs\docs-userguide-developing_plugins.md
+
+# Developing Plugins
+
+Your plugin project can be any type of python project, so long as its package name starts with `ape-` (such as `ape-ethereum`).
+The module and plugin directory name must start with `ape_` (such as `ape_ethereum`).
+To create an `ape` plugin, implement one or more API classes from the `ape.api` namespace and/or add key
+`ape_cli_subcommands` to your entry-points list in your project's `setup.py`, depending on what type of plugin you want to create.
+This guide is intended to assist in both of those use cases.
+
+The following is a list of example plugins to use as a reference when developing plugins:
+
+- [the Solidity plugin](https://github.com/apeworx/ape-solidity), an example `CompilerAPI`
+- [the Infura plugin](https://github.com/apeworx/ape-infura), an example `ProviderAPI`
+- [the Trezor plugin](https://github.com/apeworx/ape-trezor), an example `AccountAPI`
+- [the Tokenlists plugin](https://github.com/apeworx/ape-tokens), an example CLI Extension
+
+## Initialize a Plugin Project
+
+As previously mentioned, a plugin project is merely a python project.
+However, you can optionally use this [project template](https://github.com/ApeWorX/project-template) for initializing your plugin.
+**NOTE**: this template is primarily designed for plugins built within the ApeWorX team organization; not everything may apply.
+It is okay to delete anything that does not work or that you don't find helpful.
+The template may be good to follow if you want to keep your plugin of similar quality to plugins developed by the ApeWorX team.
+
+## Implementing API Classes
+
+API classes (classes from the `ape.api` namespace) are primarily composed of abstract methods and properties that plugins must implement.
+A benefit of the plugin system is that each plugin can implement these however they need, so long as they conform to the API interface.
+Two plugins with the same API may do entirely different things and yet be interchangeable in their usage.
+
+To implement an API, import its class and use it as a base-class in your implementation class.
+**WARNING**: The plugin will fail to work properly if you do not implement all the abstract methods.
+
+```python
+from ape.api import ProviderAPI
+from web3 import Web3, HTTPProvider
+
+
+class MyProvider(ProviderAPI):
+    _web3: Web3 = None  # type: ignore
+    
+    def connect(self):
+        self._web3  = Web3(HTTPProvider(str("https://localhost:1337")))
+
+    """Implement rest of abstract methods"""
+```
+
+### Registering API Classes
+
+Once you have finished implementing your API classes, you need to register them using the [@plugins.register](../methoddocs/plugins.html#ape.plugins.register) method decorator.
+
+```python
+from ape import plugins
+
+# Here, we register our provider plugin so we can use it in 'ape'.
+@plugins.register(plugins.ProviderPlugin)
+def providers():
+    # NOTE: 'MyProvider' defined in a prior code-block.
+    yield "ethereum", "local", MyProvider
+```
+
+This decorator hooks into ape core and ties everything together by looking for all local installed site-packages that start with `ape_`.
+Then, it will loop through these potential `ape` plugins and see which ones have created a plugin type registration.
+If the plugin type registration is found, then `ape` knows this package is a plugin and attempts to process it according to its registration interface.
+
+### CLI Plugins
+
+The `ape` CLI is built using the python package [click](https://palletsprojects.com/p/click/).
+To create a CLI plugin, create any type of `click` command (such as a `click.group` or a `click.command`).
+
+`_cli.py`:
+
+```python
+import click
+
+@click.group
+def cli():
+    """My custom commands."""
+
+
+@cli.command()
+def my_sub_cmd():
+    """My subcommand."""
+```
+
+Then, register it using `entrypoints`, which is a built-in python registry of items declared in `setup.py`.
+
+`setup.py`:
+
+```python
+...
+entry_points={
+    "ape_cli_subcommands": [
+        "ape_myplugin=ape_myplugin._cli:cli",
+    ],
+},
+...
+```
+
+**NOTE**: Typically, a `_cli.py` module is used instead of a `__init__.py` module for the location of the Click CLI group because it is logically separate from the Python module loading process.
+If you try to define them together and use `ape` as a library as well, there is a race condition in the loading process that will prevent the CLI plugin from working.
+
+For common `click` usages, use the `ape.cli` namespace.
+For example, use the [@existing_alias_argument() decorator](../methoddocs/cli.html#ape.cli.arguments.existing_alias_argument)) when you need a CLI argument for specifying an existing account alias:
+Follow [this guide](./clis.html) to learn more about what you can do with the utilities found in `ape.cli`.
+
+```python
+import click
+from ape.cli import existing_alias_argument
+
+@click.command()
+@existing_alias_argument()
+def my_cmd(alias):
+  click.echo(f"{alias} is an existing account!")
+```
+
+## Using Plugins
+
+Once you have finished implementing and registering your API classes, they will now be part of `ape`. For example,
+if you implemented the `AccountAPI`, you can now use accounts created from this plugin. The top-level `ape` manager
+classes are indifferent about the source of the plugin.
+
+```python
+from ape import accounts
+
+# The manager can load accounts from any account-based plugin.
+my_ledger_account = accounts.load("ledger_0")  # Created using the 'ape-ledger' plugin
+my_trezor_account = accounts.load("trezor_0")  # Created using the 'ape-trezor' plugin
+```
+
+Similarly, if you implemented a `ProviderAPI`, that provider is now accessible in the CLI via the `--network` option:
+
+```bash
+ape console my_script --network ethereum:local:my_provider_plugin
+```
+
+**NOTE**: The `--network` option is available on the commands `test` and `console` as well as any CLI command that uses the [network option decorator](../methoddocs/cli.html?highlight=network_option#ape.cli.options.network_option).
+To learn more about networks in Ape, follow [this guide](./networks.html).
+
+When creating the CLI-based plugins, you should see your CLI command as a top-level command in the `ape --help` output:
+
+```
+Commands:
+  ...
+  my-plugin  Utilities for my plugin
+  ...
+```
+
+To edit the description of the CLI command (or group), you can either set the `short_help` kwarg or use a doc-str on the command:
+
+```python
+import click
+
+
+@click.command(short_help="Utilities for my plugin")
+def cli():
+    pass
+
+""" Or """
+
+@click.command()
+def cli():
+    """Utilities for my plugin"""
+```
+
+## Logging
+
+Use Ape's logger in your plugin by importing it from the `ape.logging` module or by using it off the CLI context (from using the `@ape_cli_context` decorator).
+
+### Import the logger from the logging module
+
+```python
+from ape.logging import logger
+
+logger.info("This is a log message")
+```
+
+### Use the logger from the `@ape_cli_context`
+
+```python
+from ape.cli import ape_cli_context
+
+@ape_cli_context()
+def my_command(cli_ctx):
+  cli_ctx.logger.info("my log message")
+```
+
+
+######## ./docs\docs-userguide-installing_plugins.md
+
+# Plugins
+
+Plugins are core to Ape's architecture.
+Here are some plugin examples in Ape:
+
+- `CompilerAPI`: For supporting various languages, like Vyper or Solidity.
+- `ProviderAPI`: For connecting the blockchain, such as Alchemy, Geth, or a local Hardhat node.
+- `EcosystemAPI`: A suite of networks, such as Ethereum, Fantom, or Starknet.
+- CLI plugins: Extending the `click` CLI in Ape.
+
+## Core Plugins
+
+Ape ships with core plugins to help Ape work out-of-the-box.
+To see the core plugins that come with Ape, run the following command:
+
+```bash
+ape plugins list --all
+```
+
+Normally, the `ape plugins list` command shows you all the plugins you have installed.
+However, when you include the `--all` flag, it shows the core plugins and the available plugins as well.
+**NOTE**: The available plugins list is trusted and from the ApeWorX organization, however you can install third-party plugins from other sources as well.
+
+## Installing Plugins
+
+To add plugins to your project, edit your `ape-config.yaml` file:
+
+```yaml
+plugins:
+  - name: solidity
+    version: 0.6.0
+  - name: hardhat
+  - name: ens
+  - name: etherscan
+    version: ">=0.6.2,<0.7"
+```
+
+The `name` field is required.
+Additionally, you may specify a `version` with or without constraints.
+
+To install the plugins listed in your project, run the following command from the project's root directory:
+
+```bash
+ape plugins install .
+```
+
+To install plugins individually, run the following command:
+
+```bash
+ape plugins install vyper "solidity>=0.6,<0.7"
+```
+
+To install a plugin from a branch that is not yet released, you can use a `git+` prefixed value for the version:
+
+```yaml
+plugins:
+  - name: foobar
+    version: git+https://github.com/<owner-of-plugin>/ape-foobar.git@<branch/name>
+```
+
+Or from the CLI like:
+
+```shell
+ape plugins install "foobar@git+https://github.com/<owner-of-plugin>/ape-foobar.git@<branch/name>"
+```
+
+## Plugin Types
+
+There are many types of plugins available, including compilers, providers, networks, and CLI-based plugins.
+To learn more about the different types of plugins, see the [Developing a Plugin Guide](./developing_plugins.html).
+
+
+######## ./docs\docs-userguide-logging.md
+
+# Logging
+
+Ape provides a logger and uses it to show messages throughout the execution of its modules.
+Every CLI command comes with the logger in Ape, even custom user scripts (unless they change the behavior of `--verbosity`).
+
+The following log levels are available with Ape:
+
+| Log Level | Numeric Value | Purpose                        | Color  |
+| --------- | ------------- | ------------------------------ | ------ |
+| DEBUG     | 10            | Debug stuff                    | Blue   |
+| INFO      | 20            | General information            | Blue   |
+| SUCCESS   | 21            | To mark a successful operation | Green  |
+| WARNING   | 30            | Indicates a potential issue    | Yellow |
+| ERROR     | 40            | An error occurred              | Red    |
+
+**NOTE**: `SUCCESS` is a non-standard verbosity level custom to the framework.
+It is shown during `INFO` but not shown if set to `WARNING` or above.
+
+## CLI Logging
+
+If you are running into issues and wish to see more information logged, you likely want to run your command with `--verbosity DEBUG` or `-v debug`:
+
+```bash
+ape --verbosity DEBUG my_cmd  # long form
+ape -v debug my_cmd           # short form
+```
+
+This will output HTTP requests and anything else with a `DEBUG` logging verbosity in Ape.
+
+Alternatively, you may wish to log less and show important logs, such as `ERROR` logs.
+To do this, use the `ERROR` verbosity:
+
+```bash
+ape my_cmd -v ERROR 
+```
+
+*NOTE*: You can put the verbosity flag anywhere in your CLI command for _most_ commands.
+
+## Python Logging
+
+You can also import and use the logger in your own Python scripts or commands:
+
+```python
+from ape.logging import logger, LogLevel
+
+def main():
+    logger.info("You have entered `main()`.")
+    logger.set_level(LogLevel.WARNING)
+```
+
+
+######## ./docs\docs-userguide-networks.md
+
+# Networks
+
+When interacting with the blockchain, you will have to select a network.
+
+## Selecting a Network
+
+Commonly, you will use the `--network` option to configure your network during Ape commands.
+The following is a list of common Ape commands that can use the `--network` option:
+
+```bash
+ape test --network ethereum:local:foundry
+ape console --network arbitrum:testnet:alchemy
+```
+
+You can also use the `--network` option on scripts that use the `main()` method approach or scripts that implement that `NetworkBoundCommand` command type.
+See [the scripting guide](./scripts.html) to learn more about scripts and how to add the network option.
+
+**NOTE**: You can omit values to use defaults.
+For example, the default ecosystem is `ethereum` and the default network is `local`, so you can do:
+
+```bash
+ape run --network ::foundry
+```
+
+as a short-cut for `ethereum:local:foundry`.
+
+## Configuring Networks
+
+Change network defaults using your project's `ape-config.yaml` file.
+The following configuration changes the default ecosystem, network, and provider such that if you omitted the `--network` option on network-bound commands, it would use the value `<ecosystem-name>:<network-name>:<provider-name>`.
+
+```yaml
+default_ecosystem: <ecosystem-name>
+
+<ecosystem-name>:
+  default_network: <network-name>
+  <network-name>:
+    default_provider: <provider-name>
+```
+
+You may also configure a specific gas limit for a given network:
+
+```yaml
+<ecosystem-name>:
+  default_network: <network-name>
+  <network-name>:
+    gas_limit: "max"
+```
+
+You may use one of:
+
+- `"auto"` - gas limit is estimated for each transaction
+- `"max"` - the maximum block gas limit is used
+- A number or numeric string, base 10 or 16 (e.g. `1234`, `"1234"`, `0x1234`, `"0x1234"`)
+
+For the local network configuration, the default is `"max"`. Otherwise it is `"auto"`.
+
+## Local Network
+
+The default network in Ape is the local network (keyword `"local"`).
+It is meant for running tests and debugging contracts.
+Out-of-the-box, Ape ships with two development providers you can use for the `local` network:
+
+- [EthTester](https://github.com/ethereum/eth-tester)
+- An Ephemeral Geth process
+
+```bash
+ape test --network ::test
+ape test --network ::geth  # Launch a local development geth process
+```
+
+To learn more about testing in ape, follow [this guide](./testing.html).
+
+## Live Networks
+
+Use the core plugin `ape-geth` to connect to local or remote nodes via URI.
+The geth plugin is abstract in that it represents any node, not just geth nodes.
+However, it will work best when connected to a geth node.
+To configure network URIs in geth, you can use the `ape-config.yaml` file:
+
+```yaml
+geth:
+  ethereum:
+    mainnet:
+      uri: https://foo.node.bar
+```
+
+## Ad-hoc Network Connection
+
+If you would like to connect to a URI using the `geth` provider, you can specify a URI for the provider name in the `--network` option:
+
+```bash
+ape run script --network etheruem:mainnet:https://foo.bar
+```
+
+Additionally, if you want to connect to an unknown ecosystem or network, you can use the URI by itself.
+However, this is not recommended.
+
+```bash
+ape run script --network https://foo.bar
+```
+
+**WARNING**: The recommended approach is to find or build a plugin to have more native support.
+Some reasons for this include:
+
+1. You may need to integrate with other plugins, such as explorer plugins for getting contract types.
+2. Some chains may not implement EIP-1559 or may have forked from a specific configuration.
+3. Response differences in uncommon blocks, such as the `"pending"` block or the genesis block.
+4. Revert messages and exception-handling differences.
+5. You are limited to using `web3.py` and EVM-based chains.
+
+## Running a Network Process
+
+To run a network with a process, use the `ape networks run` command:
+
+```shell
+ape networks run
+```
+
+By default, `ape networks run` runs a development Geth process.
+To use a different network, such as `hardhat` or Anvil nodes, use the `--network` flag:
+
+```shell
+ape networks run --network ethereum:local:foundry
+```
+
+## Provider Interaction
+
+Once you are connected to a network, you now have access to a `.provider`.
+The provider class is what higher level Manager classes in Ape use to interface with the blockchain.
+You can call methods directly from the provider, like this:
+
+```python
+from ape import chain
+
+block = chain.provider.get_block("latest")
+```
+
+
+######## ./docs\docs-userguide-projects.md
+
+# Developing Projects with Ape
+
+Use `ape init` to create your project.
+A common project structure looks like this:
+
+```
+project                             # The root project directory
+├── contracts/                      # Project source files, such as '.sol' or '.vy' files
+│   └── smart_contract_example.sol  # Sample of a smart contract
+├── tests/                          # Project tests, ran using the 'ape test' command
+│   └── test_sample.py              # Sample of a test to run against your sample contract
+├── scripts/                        # Project scripts, such as deploy scripts, ran using the 'ape run   <`name>' command
+│   └── deploy.py                   # Sample script to automate a deployment of an ape project
+└── ape-config.yaml                 # The ape project configuration file
+```
+
+Notice that you can configure you ape project using the `ape-config.yaml` file.
+See the [configuration guide](./config.html) for a more detailed explanation of settings you can adjust.
+
+## Adding Plugins
+
+Your project may require plugins.
+To install plugins, use the `ape plugins install .` command.
+Learn more about configuring your project's required plugins by following [this guide](./installing_plugins.html).
+
+## Compiling Contracts
+
+The project manager object is a representation of your current project.
+Access it from the root `ape` namespace:
+
+```python
+from ape import project
+```
+
+Your `project` contains all the "relevant" files, such as source files in the `contracts/` directory.
+Use the following command to compile all contracts in the `contracts/` directory:
+
+```bash
+ape compile
+```
+
+For more information on compiling your project, see [this guide](./compile.html).
+
+## Deploying Contracts
+
+After compiling, the contract containers are accessible from the `project` manager.
+Deploy them in the `console` or in scripts; for example:
+
+```python
+from ape import accounts, project
+
+account = accounts.load("my_account_alias")
+account.deploy(project.MyContract)
+```
+
+**NOTE**: You can also deploy contracts from the container itself:
+
+```python
+from ape import accounts, project
+
+account = accounts.load("my_account_alias")
+project.MyContract.deploy(sender=account)
+```
+
+### Dependencies
+
+To set up and use dependencies in your project, follow [this guide](./dependencies.html).
+
+## Scripts
+
+The scripts folder contains project automation scripts, such as deploy scripts, as well as other executable jobs, such as scripts for running simulations.
+To learn more about scripting in Ape, see [the scripting guide](./scripts.html).
+
+## Testing
+
+Use tests to verify your project.
+You can test your project using the `ape test` command.
+The `ape test` command comes with the core-plugin `ape-test`.
+The `ape-test` plugin extends the popular python testing framework [pytest](https://docs.pytest.org/en/6.2.x/contents.html).
+Testing is a complex topic; learn more about testing using Ape framework [here](./testing.html).
+
+
+######## ./docs\docs-userguide-proxy.md
+
+# Proxy Contracts
+
+Ape is able to detect proxy contracts so that it uses the target interface when interacting with a contract.
+The following proxies are supporting in `ape-ethereum`:
+
+| Proxy Type   | Short Description                 |
+| ------------ | --------------------------------- |
+| Minimal      | EIP-1167                          |
+| Standard     | EIP-1967                          |
+| Beacon       | EIP-1967                          |
+| UUPS         | EIP-1822                          |
+| Vyper        | vyper \<0.2.9 create_forwarder_to |
+| Clones       | 0xsplits clones                   |
+| Safe         | Formerly Gnosis Safe              |
+| OpenZeppelin | OZ Upgradable                     |
+| Delegate     | EIP-897                           |
+| ZeroAge      | A minimal proxy                   |
+| SoladyPush0  | Uses PUSH0                        |
+
+Proxy detection occurs when attempting to retrieve contract types in Ape.
+Ape uses various sources to find contract types, such as explorer APIs.
+See [this guide](./contracts.html) to learn more about initializing contracts.
+
+```python
+from ape import Contract
+
+my_contract = Contract("0x...")
+```
+
+Ape will check the address you give it and detect if hosts a proxy contract.
+In the case where it determines the address is a proxy contract, it resolves the address of the implementation (every proxy is different) and returns the interface for the implementation contract.
+This allows you to still call methods as you normally do on proxy contracts.
+
+```python
+# `my_contract` address points to a proxy with no methods in the interface
+# However, Ape detected the implementation type and can find methods to call that way.
+my_contract.my_method(sender=account)
+```
+
+
+######## ./docs\docs-userguide-publishing.md
+
+# Publishing
+
+Publishing smart-contract packages using Ape is influenced from [EIP-2678](https://eips.ethereum.org/EIPS/eip-2678) and uses the [ethpm-types](https://github.com/ApeWorX/ethpm-types) Python package extensively (which is also managed by the ApeWorX organization).
+This guide exists to walk through the steps of publishing your project.
+
+## Compilation
+
+First, your project must compile.
+
+```bash
+ape compile
+```
+
+To learn more about project compilation, follow [this guide](./compile.html).
+Once your project has successfully compiled, you will have the start of your `PackageManifest` generated in your project's `.build/` directory.
+
+## Tracking Deployments
+
+If your project contains deployments that you wish to include in its package manifest, use the [track_deployment()](../methoddocs/managers.html#ape.managers.project.manager.ProjectManager.track_deployment) method.
+Example:
+
+```python
+from ape import accounts, project
+
+account = accounts.load("mainnet-account")
+
+# Assume your project has a contract named 'MyContract' with constructor that accepts argument '123'.
+contract = project.MyContract.deploy(123, sender=account)
+project.track_deployment(contract)
+```
+
+If the contract is already deployed, you can use [Contract](../methoddocs/ape.html#ape.Contract) to get a contract instance:
+
+```python
+from ape import Contract, project
+
+contract = Contract("0x12c17f958d2ee523a2206206994597c13d831e34")
+project.track_deployment(contract)
+```
+
+For more information on accessing contract instances, follow [this guide](./contracts.html).
+
+## Publishing to Explorer
+
+If you want to publish (aka verify) your contracts to an explorer, you can use the [publish_contract](../methoddocs/api.html#ape.explorers.ExplorerAPI.publish_contract) on the `ExplorerAPI`.
+
+```python
+from ape import networks
+
+networks.provider.network.explorer.publish_contract("0x123...")
+```
+
+If you want to automatically publish the source code upon deployment, you can use the `publish=` kwarg on the deploy methods:
+
+```python
+from ape import accounts, project
+
+accounts.deploy(project.MyContract, publish=True)
+```
+
+
+######## ./docs\docs-userguide-scripts.md
+
+# Scripting
+
+You can write scripts that run using the `ape run` command.
+The `ape run` command will register and run Python files defined under the `scripts/` directory that do not start with an `_` underscore.
+
+## CLI Scripts
+
+Place scripts in your project's `scripts/` directory.
+Follow [this guide](./projects.html) to learn more about the Ape project structure.
+If your scripts take advantage of utilities from our [`ape.cli`](../methoddocs/cli.html#ape-cli) submodule, you can build a [Click](https://click.palletsprojects.com/) command line interface by defining a `click.Command` or `click.Group` object called `cli` in your file:
+Follow [this guide](./clis.html) to learn more about what you can do with the utilities found in `ape.cli`.
+
+```python
+import click
+
+@click.command()
+def cli():
+    print("Hello world!")
+```
+
+Assume we named the script `helloworld.py`.
+To execute the script, run the following:
+
+```bash
+ape run helloworld
+```
+
+You can also execute scripts in subdirectories.
+For example, assuming we have script `<project>/scripts/hello/helloworld.py`, we would execute it by running:
+
+```bash
+ape run hello helloworld
+```
+
+Note that by default, `cli` scripts do not have [`ape.cli.network_option`](../methoddocs/cli.html?highlight=options#ape.cli.options.network_option) installed, giving you more flexibility in how you define your scripts.
+However, you can add the `network_option` to your scripts by importing both the `NetworkBoundCommand` and the `network_option` from the `ape.cli` namespace:
+
+```python
+import click
+from ape.cli import network_option, NetworkBoundCommand
+
+
+@click.command(cls=NetworkBoundCommand)
+@network_option()
+def cli(network):
+    click.echo(f"You are connected to network '{network}'.")
+```
+
+Assume we saved this script as `shownet.py` and have the [ape-alchemy](https://github.com/ApeWorX/ape-alchemy) plugin installed.
+Try changing the network using the `--network` option:
+
+```bash
+ape run shownet --network ethereum:mainnet:alchemy
+```
+
+## Main Method Scripts
+
+You can also use the main-method approach when defining scripts.
+To do this, define a method named `main()` in your script:
+
+```python
+def main():
+    print("Hello world!")
+```
+
+**NOTE**: main-method scripts will always provide a network option to the call and thus will always connect to a network.
+
+To demonstrate, use the following script:
+
+```python
+from ape import networks
+import click
+
+
+def main():
+    ecosystem_name = networks.provider.network.ecosystem.name
+    network_name = networks.provider.network.name
+    provider_name = networks.provider.name
+    click.echo(f"You are connected to network '{ecosystem_name}:{network_name}:{provider_name}'.")
+```
+
+
+######## ./docs\docs-userguide-testing.md
+
+# Testing
+
+Testing an ape project is important and easy.
+
+## Test Structure
+
+Tests must be located in a project's `tests/` directory. Each **test file** must start with `test_` and have the `.py` extension, such as `test_my_contract.py`.
+Each **test method** within the file must also start with `test_`.
+The following is an example test:
+
+```python
+def test_add():
+    assert 1 + 1 == 2
+```
+
+**NOTE**: `pytest` assumes the *actual* value is on the left and the *expected* value is on the right.
+
+## Test Pattern
+
+Tests are generally divisible into three parts:
+
+1. Set-up
+2. Invocation
+3. Assertion
+
+In the example above, we created a fixture that deploys our smart-contract.
+This is an example of a 'setup' phase.
+Next, we need to call a method on our contract.
+Let's assume there is an `authorized_method()` that requires the owner of the contract to make the transaction.
+If the sender of the transaction is not the owner, the transaction will fail to complete and will revert.
+
+This is an example of how that test may look:
+
+```python
+def test_authorization(my_contract, owner, not_owner):
+    my_contract.set_owner(sender=owner)
+    assert owner == my_contract.owner()
+
+    with ape.reverts("!authorized"):
+        my_contract.authorized_method(sender=not_owner)
+```
+
+```{note}
+Ape has built-in test and fixture isolation for all pytest scopes.
+To disable isolation add the `--disable-isolation` flag when running `ape test`
+```
+
+## Fixtures
+
+Fixtures are any type of reusable instances of something with configurable scopes. `pytest` handles passing fixtures
+into each test method as test-time. To learn more about [fixtures](https://docs.pytest.org/en/7.1.x/explanation/fixtures.html)
+
+Define fixtures for static data used by tests. This data can be accessed by all tests in the suite unless specified otherwise. This could be data as well as helpers of modules which will be passed to all tests.
+
+A common place to define fixtures are in the **conftest.py** which should be saved under the test directory:
+
+conftest.py is used to import external plugins or modules. By defining the following global variable, pytest will load the module and make it available for its test.
+
+You can define your own fixtures or use existing ones. The `ape-test` plugin comes
+with fixtures you will likely want to use:
+
+### accounts fixture
+
+You have access to test accounts.
+These accounts are automatically funded, and you can use them to transact in your tests.
+Access each [test account](../methoddocs/api.html?highlight=testaccount#ape.api.accounts.TestAccountAPI) by index from the `accounts` fixture:
+
+```python
+def test_my_method(accounts):
+    owner = accounts[0]
+    receiver = accounts[1]
+```
+
+For code readability and sustainability, create your own fixtures using the `accounts` fixture:
+
+```python
+import pytest
+
+@pytest.fixture
+def owner(accounts):
+    return accounts[0]
+
+
+@pytest.fixture
+def receiver(accounts):
+    return accounts[1]
+
+
+def test_my_method(owner, receiver):
+    ...
+```
+
+You can configure your accounts by changing the `mnemonic` or `number_of_accounts` settings in the `test` section of your `ape-config.yaml` file:
+
+```yaml
+test:
+  mnemonic: test test test test test test test test test test test junk
+  number_of_accounts: 5
+```
+
+If you are running tests against `anvil`, your generated test accounts may not correspond to the `anvil`'s default generated accounts despite using the same mnemonic. In such a case, you are able to specify a custom derivation path in `ape-config.yaml`:
+
+```yaml
+test:
+  mnemonic: test test test test test test test test test test test junk
+  number_of_accounts: 5
+  hd_path: "m/44'/60'/0'/0/{}"
+```
+
+If you are using a fork-provider, such as [Hardhat](https://github.com/ApeWorX/ape-hardhat), you can use impersonated accounts by accessing random addresses off the fixture:
+
+```python
+@pytest.fixture
+def vitalik(accounts):
+    return accounts["0xab5801a7d398351b8be11c439e05c5b3259aec9b"]
+```
+
+Using a fork-provider such as [Hardhat](https://github.com/ApeWorX/ape-hardhat), when using a contract instance as the sender in a transaction, it will be automatically impersonated:
+
+```python
+def test_my_method(project, accounts):
+    contract = project.MyContract.deploy(sender=accounts[0])
+    other_contract = project.OtherContract.deploy(sender=accounts[0])
+    contract.my_method(sender=other_contract)
+```
+
+It has the same interface as the [TestAccountManager](../methoddocs/managers.html#ape.managers.accounts.TestAccountManager), (same as doing `accounts.test_accounts` in a script or the console).
+
+### chain fixture
+
+Use the chain fixture to access the connected provider or adjust blockchain settings.
+
+For example, increase the pending timestamp:
+
+```python
+def test_in_future(chain):
+    chain.pending_timestamp += 86000
+    assert "Something"
+    chain.pending_timestamp += 86000
+    assert "Something else"
+```
+
+It has the same interface as the [ChainManager](../methoddocs/managers.html#ape.managers.chain.ChainManager).
+
+### networks fixture
+
+Use the `networks` fixture to change the active provider in tests.
+
+```python
+def test_multi_chain(networks):
+    assert "Something"  # Make assertion in root network
+
+    # NOTE: Assume have ecosystem named "foo" with network "local" and provider "bar"
+    with networks.foo.local.use_provider("bar"):
+        assert "Something else"
+```
+
+It has the same interface as the [NetworkManager](../methoddocs/managers.html#ape.managers.networks.NetworkManager).
+
+### project fixture
+
+You also have access to the `project` you are testing. You will need this to deploy your contracts in your tests.
+
+```python
+import pytest
+
+
+@pytest.fixture
+def owner(accounts):
+    return accounts[0]
+
+
+@pytest.fixture
+def my_contract(project, owner):
+    #           ^ use the 'project' fixture from the 'ape-test' plugin
+    return owner.deploy(project.MyContract)
+```
+
+It has the same interface as the [ProjectManager](../methoddocs/managers.html#module-ape.managers.project.manager).
+
+### Contract fixture
+
+Use the `Contract` fixture to create contract instances:
+
+```python
+@pytest.fixture
+def my_contract(Contract):
+    return Contract(<address>)
+```
+
+It has the same interface as the [ChainManager](../methoddocs/managers.html#ape.managers.chain.ChainManager).
+
+## Ape testing commands
+
+```bash
+ape test
+```
+
+To run a particular test:
+
+```bash
+ape test test_my_contract
+```
+
+Use ape test `-I` to open the interactive mode at the point of exception. This allows the user to inspect the point of failure in your tests.
+
+```bash
+ape test test_my_contract -I -s
+```
+
+## Test Providers
+
+Out-of-the-box, your tests run using the `eth-tester` provider, which comes bundled with ape. If you have `geth` installed, you can use the `ape-geth` plugin that also comes with ape.
+
+```bash
+ape test --network ethereum:local:geth
+```
+
+Each testing plugin should work the same way. You will have access to the same test accounts.
+
+Another option for testing providers is the [ape-hardhat](https://github.com/ApeWorX/ape-hardhat) plugin, which does not come with `ape` but can be installed by including it in the `plugins` list in your `ape-config.yaml` file or manually installing it using the command:
+
+```bash
+ape plugins install hardhat
+```
+
+## Advanced Testing Tips
+
+If you want to use sample projects, follow this link to [Ape Academy](https://github.com/ApeAcademy).
+
+```
+project                     # The root project directory
+└── tests/                  # Project tests folder, ran using the 'ape test' command to run all tests within the folder.
+    └── conftest.py         # A file to define global variable for testing
+    └── test_accounts.py    # A test file, if you want to ONLY run one test file you can use 'ape test test_accounts.py' command
+    └── test_mint.py        # A test file
+```
+
+Here is an example of a test function from a sample [NFT project](https://github.com/ApeAcademy/ERC721)
+
+```python
+def test_account_balance(project, owner, receiver, nft):
+    quantity = 1
+    nft.mint(receiver, quantity, ["0"], value=nft.PRICE() * quantity, sender=owner)
+    actual = project.balanceOf(receiver)
+    expect = quantity
+    assert actual == expect
+```
+
+## Testing Transaction Failures
+
+Similar to `pytest.raises()`, you can use `ape.reverts()` to assert that contract transactions fail and revert.
+
+From our earlier example we can see this in action:
+
+```python
+def test_authorization(my_contract, owner, not_owner):
+    my_contract.set_owner(sender=owner)
+    assert owner == my_contract.owner()
+
+    with ape.reverts("!authorized"):
+        my_contract.authorized_method(sender=not_owner)
+```
+
+`reverts()` takes two optional parameters:
+
+### `expected_message`
+
+This is the expected revert reason given when the transaction fails.
+If the message in the `ContractLogicError` raised by the transaction failure is empty or does not match the `expected_message`, then `ape.reverts()` will raise an `AssertionError`.
+
+You may also supply an `re.Pattern` object to assert on a message pattern, rather than on an exact match.
+
+```python
+# Matches explicitly "foo" or "bar"
+with ape.reverts(re.compile(r"^(foo|bar)$")):
+    ...
+```
+
+### `dev_message`
+
+This is the expected dev message corresponding to the line in the contract's source code where the error occurred.
+These can be helpful in optimizing for gas usage and keeping revert reason strings shorter.
+
+Dev messages take the form of a comment in Vyper, and should be placed on the line that may cause a transaction revert:
+
+```python
+assert x != 0  # dev: invalid value
+```
+
+Take for example:
+
+```python
+# @version 0.3.7
+
+@external
+def check_value(_value: uint256) -> bool:
+    assert _value != 0  # dev: invalid value
+    return True
+```
+
+We can explicitly cause a transaction revert and check the failed line by supplying an expected `dev_message`:
+
+```python
+def test_authorization(my_contract, owner):
+    with ape.reverts(dev_message="dev: invalid value"):
+        my_contract.check_value(sender=owner)
+```
+
+When the transaction reverts and `ContractLogicError` is raised, `ape.reverts()` will check the source contract to see if the failed line contains a message.
+
+There are a few scenarios where `AssertionError` will be raised when using `dev_message`:
+
+- If the line in the source contract has a different dev message or no dev message
+- If the contract source cannot be obtained
+- If the transaction trace cannot be obtained
+
+Because `dev_message` relies on transaction tracing to function, you must use a provider like [ape-hardhat](https://github.com/ApeWorX/ape-hardhat) when testing with `dev_message`.
+
+You may also supply an `re.Pattern` object to assert on a dev message pattern, rather than on an exact match.
+
+```python
+# Matches explictly "dev: foo" or "dev: bar"
+with ape.reverts(dev_message=re.compile(r"^dev: (foo|bar)$")):
+    ...
+```
+
+### Caveats
+
+#### Language Support
+
+As of `ape` version `0.5.6`, `dev_messages` assertions are available for contracts compiled with [ape-vyper](https://github.com/ApeWorX/ape-vyper), but not for those compiled with [ape-solidity](https://github.com/ApeWorX/ape-solidity) or [ape-cairo](https://github.com/ApeWorX/ape-cairo).
+
+#### Inlining
+
+Due to function inlining, the position of the `# dev: ...` message may sometimes be one line higher than expected:
+
+```python
+@external
+def foo(_x: decimal) -> decimal:  # dev: correct location
+    return sqrt(_x)  # dev: incorrect location
+```
+
+This typically only applies when trying to add dev messages to statements containing built-in function calls.
+
+#### Non-reentrant Functions
+
+Similarly, if you require dev assertions for non-reentrant functions you must be sure to leave the comment on the function that should not have reentry:
+
+```python
+@internal
+@nonreentrant('lock')
+def _foo_internal():  # dev: correct location
+    pass
+
+@external
+@nonreentrant('lock')
+def foo():
+    self._foo_internal()  # dev: incorrect location
+```
+
+### Custom Errors
+
+As of Solidity 0.8.4, custom errors have been introduced to the ABI.
+To make assertions on custom errors, you can use the types defined on your contracts.
+
+For example, if I have a contract called `MyContract.sol`:
+
+```solidity
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.4;
+
+error Unauthorized(address unauth_address);
+
+contract MyContract {
+    address payable owner = payable(msg.sender);
+    function withdraw() public {
+        if (msg.sender != owner)
+            revert Unauthorized(msg.sender);
+        owner.transfer(address(this).balance);
+    }
+}
+```
+
+I can ensure unauthorized withdraws are disallowed by writing the following test:
+
+```python
+import ape
+import pytest
+
+@pytest.fixture
+def owner(accounts):
+    return accounts[0]
+
+@pytest.fixture
+def hacker(accounts):
+    return accounts[1]
+
+@pytest.fixture
+def contract(owner, project):
+    return owner.deploy(project.MyContract)
+
+def test_unauthorized_withdraw(contract, hacker):
+    with ape.reverts(contract.Unauthorized, unauth_address=hacker.address):
+        contract.withdraw(sender=hacker)
+```
+
+You can also use custom error types from the contract container (from `ape.project` or the `project` fixture):
+
+```python
+import ape
+
+def test_unauthorized(contract, hacker, project):
+    with ape.reverts(project.MyContract.Unauthorized, unauth_address=hacker.address):
+        contract.withdraw(sender=hacker)
+```
+
+You may need to use the container approach for asserting on custom errors that occur during failing `deploy` transactions because you won't have access to the contract instance yet.
+Here is an example of what that may look like:
+
+```python
+import ape
+
+def test_error_on_deploy(account, project):
+    with ape.reverts(project.Token.MyCustomError):
+        ape.project.HasError.deploy(sender=account)
+```
+
+Alternatively, you can attempt to use the address from the revert error to find the error type.
+**NOTE**: The address will only exist for transactions that were published (e.g. not for failures during estimating gas), and this may only work on certain providers.
+
+```python
+import ape
+
+def test_error_on_deploy(account):
+    # NOTE: We are using `as rev` here to capture the revert info
+    # so we can attempt to lookup the contract later.
+    with ape.reverts() as rev:
+        ape.project.HasError.deploy(sender=account)
+    
+    assert rev.value.address is not None, "Receipt never found, contract never cached"
+    
+    # Grab the cached instance using the error's address
+    # and assert the custom error this way.
+    contract = ape.Contract(rev.value.address)
+    assert isinstance(rev.value, contract.MyError)
+```
+
+## Multi-chain Testing
+
+The Ape framework supports connecting to alternative networks / providers in tests.
+
+To run an entire test using a specific network / provider combination, use the `use_network` pytest marker:
+
+```python
+import pytest
+
+
+@pytest.mark.use_network("fantom:local:test")
+def test_my_fantom_test(chain):
+    assert chain.provider.network.ecosystem.name == "fantom"
+
+
+@pytest.mark.use_network("ethereum:local:test")
+def test_my_ethereum_test(chain):
+    assert chain.provider.network.ecosystem.name == "ethereum"
+```
+
+To switch networks mid-test, use the `networks` context-manager:
+
+```python
+# Switch to Fantom mid test
+def test_my_multichain_test(networks):
+    # The test starts in 1 ecosystem but switches to another
+    assert networks.provider.network.ecosystem.name == "ethereum"
+
+    with networks.fantom.local.use_provider("test") as provider:
+        assert provider.network.ecosystem.name == "fantom"
+
+    # You can also use the context manager like this:
+    with networks.parse_network_choice("fantom:local:test") as provider:
+       assert provider.network.ecosystem.name == "fantom"
+```
+
+You can also set the network context in a pytest fixture.
+This is useful if certain fixtures must run in certain networks.
+
+```python
+import pytest
+
+
+@pytest.fixture
+def stark_contract(networks, project):
+    with networks.parse_network_choice("starknet:local"):
+        yield project.MyStarknetContract.deploy()
+
+
+def test_starknet_thing(stark_contract, stark_account):
+    # Uses the starknet connection via the stark_contract fixture
+    receipt = stark_contract.my_method(sender=stark_account)
+    assert not receipt.failed
+```
+
+When you exit a provider's context, Ape **does not** disconnect the provider.
+When you re-enter that provider's context, Ape uses the previously-connected provider.
+At the end of the tests, Ape disconnects all the providers.
+Thus, you can enter and exit a provider's context as much as you need in tests.
+
+## Gas Reporting
+
+To include a gas report at the end of your tests, you can use the `--gas` flag.
+**NOTE**: This feature requires using a provider with tracing support, such as [ape-hardhat](https://github.com/ApeWorX/ape-hardhat).
+
+```bash
+ape test --network ethereum:local:hardhat --gas
+```
+
+At the end of test suite, you will see tables such as:
+
+```sh
+                            FundMe Gas
+
+  Method           Times called    Min.    Max.    Mean   Median
+ ────────────────────────────────────────────────────────────────
+  fund                        8   57198   91398   82848    91398
+  withdraw                    2   28307   38679   33493    33493
+  changeOnStatus              2   23827   45739   34783    34783
+  getSecret                   1   24564   24564   24564    24564
+
+                  Transferring ETH Gas
+
+  Method     Times called   Min.   Max.   Mean   Median
+ ───────────────────────────────────────────────────────
+  to:test0              2   2400   9100   5750     5750
+
+                     TestContract Gas
+
+  Method      Times called    Min.    Max.    Mean   Median
+ ───────────────────────────────────────────────────────────
+  setNumber              1   51021   51021   51021    51021
+```
+
+The following demonstrates how to use the `ape-config.yaml` file to exclude contracts and / or methods from the gas report:
+
+```yaml
+test:
+  gas:
+    exclude:
+      - method_name: DEBUG_*         # Exclude all methods starting with `DEBUG_`.
+      - contract_name: MockToken     # Exclude all methods in contract named `MockToken`.
+      - contract_name: PoolContract  # Exclude methods starting with `reset_` in `PoolContract`.
+        method_name: reset_*
+```
+
+Similarly, you can exclude sources via the CLI option `--gas-exclude`.
+The value `--gas-exclude` takes is a comma-separated list of colon-separated values representing the structure similar as above, except you must explicitly use `*` where meaning "all".
+For example to exclude all methods starting with `DEBUG_`, you would do:
+
+```bash
+ape test --gas --gas-exclude "*:DEBUG_*".
+```
+
+To exclude all methods in the `MockToken` contract, do:
+
+```bash
+ape test --gas --gas-exclude MockToken
+```
+
+And finally, to exclude all methods starting with `reset_` in `PoolContract`, do:
+
+```bash
+ape test --gas --gas-exclude "PoolContract:reset_*"
+```
+
+## Iterative Testing
+
+Ape has a set of flags that controls running your test suite locally in a "watch" mode,
+which means watching for updates to files in your project and re-triggering the test suite.
+
+To enable this mode, run `ape test --watch` to set up this mode using the default settings.
+While in this mode, any time a `.py` file (i.e. your tests) or smart contract source file
+(i.e. any files that get compiled using your installed compiler plugins) is added, removed,
+or changed, then the `ape test` task will be re-triggered, based on a polling interval.
+
+To exit this mode, press Ctrl+D (on Linux or macOS) to stop the execution and undo it.
+
+## Contract Coverage
+
+To get contract coverage, use the `--coverage` flag when running `ape test`:
+
+```shell
+ape test --coverage
+```
+
+**NOTE**: Some types of coverage require using a provider that supports transaction tracing, such as `ape-hardhat` or `ape-foundry`.
+
+Afterwards, you should see a coverage report looking something like:
+
+```shell
+============================================= Coverage Profile =============================================
+               Contract Coverage               
+                                               
+  Name          Stmts   Miss   Cover    Funcs  
+ ───────────────────────────────────────────── 
+  Contract.vy   7       1      85.71%   80.0% 
+```
+
+To generate other coverage reports such as XML or HTML, configure it like so:
+
+```yaml
+test:
+  coverage:
+    reports:
+      terminal: False  # Disable the terminal table (True by default)
+      xml: True  # Enable XML report (.build/coverage.xml)
+      html: True  # Enable HTML report (.build/htmlcov)
+```
+
+To see a much more verbose coverage report, set the `terminal` field to a dictionary that includes `"verbose": true`:
+
+```yaml
+test:
+  coverage:
+    reports:
+      terminal:
+        verbose: true  # Show verbose coverage information in the terminal.
+```
+
+Then, you will see table outputs like this:
+
+```shell
+===================================== Coverage Profile ========================================
+                MyContract Coverage
+
+                         Func   Stmts   Miss    Cover
+ ─────────────────────────────────────────────────────
+                  __builtin__       2      0   100.0%
+            _immutable_number       0      0   100.0%
+                      _number       0      0   100.0%
+                 foo_method()       1      0   100.0%
+          foo_method(uint256)       1      0   100.0%
+  foo_method(uint256,uint256)       3      0   100.0%
+                  view_method       1      0   100.0%
+
+           line=0.0%, func=0.0%
+```
+
+This is useful when trying to find the missing areas to cover.
+The HTML report also supports `verbose: true` and it will show similar tables.
+
+**NOTE**: You may notice methods with zero statements.
+One example of a method with zero statements may be from an auto-generated getter method for a public variable; certain versions of Vyper do not contain source mappings for these methods.
+However, Ape will still check to see if this method has been called in your tests.
+To get 100% coverage, you must call these methods in your tests.
+
+**NOTE**: Notice some methods use the full selector while others don't.
+Methods that use the selector mean that their short name is shared with other methods.
+This happens in Vyper from auto-generated kwarg-based methods.
+Thus, the full selector is used to distinguish the methods in the coverage (and gas) reports.
+
+Much like gas reporting, you can also exclude contracts and methods from tracking coverage using your `ape-config.yaml` file.
+The following demonstrates how to do this:
+
+```yaml
+test:
+  coverage:
+    exclude:
+      - method_name: DEBUG_*         # Exclude all methods starting with `DEBUG_`.
+      - contract_name: MockToken     # Exclude all methods in contract named `MockToken`.
+      - contract_name: PoolContract  # Exclude methods starting with `reset_` in `PoolContract`.
+        method_name: reset_*
+```
+
+
+######## ./docs\docs-userguide-transactions.md
+
+# Making Transactions
+
+Regardless of how you are using `ape`, you will likely be making transactions.
+There are various types of transactions you can make with `ape`. A simple example is deploying a contract.
+
+## Deployment
+
+Deploying a smart contract is a unique type of transaction where we don't necessarily care about the receipt as much
+as we care about the contract instance. That is why the return value from
+[the deploy method](../methoddocs/api.html?highlight=accountapi#ape.api.accounts.AccountAPI.deploy) is a
+[ContractInstance](../methoddocs/contracts.html?highlight=contractinstance#ape.contracts.base.ContractInstance).
+
+The following example demonstrates a simple deployment script:
+
+```python
+from ape import accounts, project
+
+
+def deploy():
+    account = accounts.load("MyAccount")
+    # Assume you have a contract named `MyContract` in your project's contracts folder.
+    return account.deploy(project.MyContract)
+```
+
+To get the receipt of a `deploy` transaction, use the [ContractInstance.receipt](../methoddocs/contracts.html#ape.contracts.base.ContractInstance.receipt) property:
+
+```python
+from ape import accounts, project
+
+dev = accounts.load("dev")
+contract = project.MyContract.deploy(sender=dev)
+
+# The receipt is available on the contract instance and has the expected sender.
+receipt = contract.receipt
+assert receipt.sender == dev
+```
+
+### Deployment from Ape Console
+
+Deploying from [ape console](./console.html) allows you to interact with a contract in real time. You can also use the `--network` flag to connect a live network.
+
+```bash
+ape console --network ethereum:goerli:alchemy
+```
+
+This will launch an IPython shell:
+
+```python
+In [1]: dev = accounts.load("dev")
+In [2]: token = dev.deploy(project.Token) 
+In [3]: token.contract_method_defined_in_contract()
+```
+
+For an in depth tutorial on how to deploy, please visit [ApeAcademy](https://academy.apeworx.io/).
+
+## Dynamic-Fee Transactions
+
+Before [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559), all transactions used a `gas_price`.
+After the London fork of Ethereum, the `gas_price` got broken up into two values, `max_fee` and `max_priority_fee`.
+The `ape` framework supports both types of transactions. By default, transactions use the dynamic-fee model.
+Making contract calls without specifying any additional `kwargs` will use a dynamic-fee transaction.
+
+Calling certain methods on a deployed-contract is one way to transact.
+
+```python
+contract = deploy()  # Example from above, that returns a contract instance.
+contract.fundMyContract(value="1 gwei", sender=sender)  # Assuming there is a method named 'fundMyContract' on MyContract.
+```
+
+In the example above, the call to `fundMyContract()` invokes a dynamic-fee transaction.
+To have more control of the fee-values, you can specify the `max_fee`, the `max_priority_fee`, or both.
+
+```python
+contract.fundMyContract(value="1 gwei", max_priority_fee="50 gwei", max_fee="100 gwei", sender=sender)
+```
+
+The `max_priority_fee` cannot exceed the `max_fee`, as the `max_fee` includes both the base fee and the priority fee.
+The `max_priority_fee`, when omitted, defaults to the return value from the
+[ProviderAPI.priority_fee](../methoddocs/api.html?highlight=accountapi#ape.api.providers.ProviderAPI.priority_fee)
+method property.
+The `max_fee`, when omitted, defaults to the `priority_fee` (which gets its default applied beforehand) plus the latest
+the value returned from the
+[ProviderAPI.base_fee](../methoddocs/api.html?highlight=accountapi#ape.api.providers.ProviderAPI.base_fee) method
+property.
+
+## Static-Fee Transactions
+
+Static-fee transactions are the transactions that Ethereum used before the London-fork
+(before [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559)).
+**However, some applications may still require using static-fee transactions.**
+
+One way to use a static-fee transaction is by specifying the `gas_price` as a key-value argument:
+
+```python
+contract.fundMyContract(value="1 gwei", gas_price="100 gwei", sender=sender)
+```
+
+**NOTE**: Miners prioritize static-fee transactions based on the highest `gas_price`.
+
+Another way to use a static-fee transaction (without having to provide `gas_price`) is to set the key-value
+argument `type` equal to `0x00`.
+
+```python
+contract.fundMyContract(value="1 gwei", type="0x0", sender=sender)
+```
+
+When declaring `type="0x0"` and _not_ specifying a `gas_price`, the `gas_price` gets set using the provider's estimation.
+
+## Transaction Logs
+
+In Ape, you can easily get all the events on a receipt.
+Use the `.events` property to access the ([ContractLog](../methoddocs/types.html#ape.types.ContractLog)) objects.
+Each object represents an event emitted from the call.
+
+```python
+receipt = contract.fundMyContract(value="1 gwei", type="0x0", sender=sender)
+print(receipt.events)
+```
+
+To only get specific log types, use the `decode_logs()` method and pass the event ABIs as arguments:
+
+```python
+for log in receipt.decode_logs(contract.FooEvent.abi, contract.BarEvent.abi):
+    print(log.amount)  # Assuming 'amount' is a property on the event.
+```
+
+You can also use the [ContractEvent.from_receipt(receipt)](../methoddocs/contracts.html?highlight=contractevent#ape.contracts.base.ContractEvent.from_receipt) method:
+
+```python
+receipt = contract.fooMethod(value="1 gwei", type="0x0", sender=sender)
+for log in contract.FooEvent.from_receipt(receipt):
+    print(log.amount)  # Assuming 'amount' is a property on the event.
+```
+
+**NOTE**: If you have more than event with the same name in your contract type's ABI, you can access the events by using the [get_event_by_signature()](../methoddocs/contracts.html?highlight=contractinstance#ape.contracts.base.ContractInstance.get_event_by_signature) method:
+
+```python
+event_type = contract.get_event_by_signature("FooEvent(uint256 bar, uint256 baz)")
+receipt.decode_logs(event_type.abi)
+```
+
+Otherwise, you will get an `AttributeError`.
+
+## Transaction Acceptance Timeout
+
+**NOTE** For longer running scripts, you may need to increase the transaction acceptance timeout.
+The default value is 2 minutes for live networks and 20 seconds for local networks.
+In your `ape-config.yaml` file, add the following:
+
+```yaml
+ethereum:
+  mainnet:
+    transaction_acceptance_timeout: 600  # 5 minutes
+```
+
+## Traces
+
+If you are using a provider that is able to fetch transaction traces, such as the [ape-hardhat](https://github.com/ApeWorX/ape-hardhat) provider, you can call the [`ReceiptAPI.show_trace()`](../methoddocs/api.html?highlight=receiptapi#ape.api.transactions.ReceiptAPI.show_trace) method.
+
+```python
+from ape import accounts, project
+
+owner = accounts.load("acct")
+contract = project.Contract.deploy(sender=owner)
+receipt = contract.methodWithoutArguments()
+receipt.show_trace()
+```
+
+**NOTE**: If your provider does not support traces, you will see a `NotImplementedError` saying that the method is not supported.
+
+The trace might look something like:
+
+```bash
+Call trace for '0x43abb1fdadfdae68f84ce8cd2582af6ab02412f686ee2544aa998db662a5ef50'
+txn.origin=0x1e59ce931B4CFea3fe4B875411e280e173cB7A9C
+ContractA.methodWithoutArguments() -> 0x00..7a9c [469604 gas]                                                                                                                                     
+├── SYMBOL.supercluster(x=234444) -> [                                                                                                                                                            
+│       [23523523235235, 11111111111, 234444],                                                                                                                                                    
+│       [                                                                                                                                                                                         
+│         345345347789999991,                                                                                                                                                                     
+│         99999998888882,                                                                                                                                                                         
+│         345457847457457458457457457                                                                                                                                                             
+│       ],                                                                                                                                                                                        
+│       [234444, 92222229999998888882, 3454],                                                                                                                                                     
+│       [                                                                                                                                                                                         
+│         111145345347789999991,                                                                                                                                                                  
+│         333399998888882,                                                                                                                                                                        
+│         234545457847457457458457457457                                                                                                                                                          
+│       ]                                                                                                                                                                                         
+│     ] [461506 gas]                                                                                                                                                                              
+├── SYMBOL.methodB1(lolol="ice-cream", dynamo=345457847457457458457457457) [402067 gas]                                                                                                           
+│   ├── ContractC.getSomeList() -> [                                                                                                                                                              
+│   │     3425311345134513461345134534531452345,                                                                                                                                                  
+│   │     111344445534535353,                                                                                                                                                                     
+│   │     993453434534534534534977788884443333                                                                                                                                                    
+│   │   ] [370103 gas]                                                                                                                                                                            
+│   └── ContractC.methodC1(                                                                                                                                                                       
+│         windows95="simpler",                                                                                                                                                                    
+│         jamaica=345457847457457458457457457,                                                                                                                                                    
+│         cardinal=ContractA                                                                                                                                                                      
+│       ) [363869 gas]                                                                                                                                                                            
+├── SYMBOL.callMe(blue=tx.origin) -> tx.origin [233432 gas]                                                                                                                                       
+├── SYMBOL.methodB2(trombone=tx.origin) [231951 gas]                                                                                                                                              
+│   ├── ContractC.paperwork(ContractA) -> (                                                                                                                                                       
+│   │     os="simpler",                                                                                                                                                                           
+│   │     country=345457847457457458457457457,                                                                                                                                                    
+│   │     wings=ContractA                                                                                                                                                                         
+│   │   ) [227360 gas]                                                                                                                                                                            
+│   ├── ContractC.methodC1(windows95="simpler", jamaica=0, cardinal=ContractC) [222263 gas]                                                                                                       
+│   ├── ContractC.methodC2() [147236 gas]                                                                                                                                                         
+│   └── ContractC.methodC2() [122016 gas]                                                                                                                                                         
+├── ContractC.addressToValue(tx.origin) -> 0 [100305 gas]                                                                                                                                         
+├── SYMBOL.bandPractice(tx.origin) -> 0 [94270 gas]                                                                                                                                               
+├── SYMBOL.methodB1(lolol="lemondrop", dynamo=0) [92321 gas]                                                                                                                                      
+│   ├── ContractC.getSomeList() -> [                                                                                                                                                              
+│   │     3425311345134513461345134534531452345,                                                                                                                                                  
+│   │     111344445534535353,                                                                                                                                                                     
+│   │     993453434534534534534977788884443333                                                                                                                                                    
+│   │   ] [86501 gas]                                                                                                                                                                             
+│   └── ContractC.methodC1(windows95="simpler", jamaica=0, cardinal=ContractA) [82729 gas]                                                                                                        
+└── SYMBOL.methodB1(lolol="snitches_get_stiches", dynamo=111) [55252 gas]                                                                                                                         
+    ├── ContractC.getSomeList() -> [                                                                                                                                                              
+    │     3425311345134513461345134534531452345,                                                                                                                                                  
+    │     111344445534535353,                                                                                                                                                                     
+    │     993453434534534534534977788884443333                                                                                                                                                    
+    │   ] [52079 gas]                                                                                                                                                                             
+    └── ContractC.methodC1(windows95="simpler", jamaica=111, cardinal=ContractA) [48306 gas]                                                                                                      
+```
+
+Additionally, you can view the traces of other transactions on your network.
+
+```python
+from ape import networks
+
+txn_hash = "0x053cba5c12172654d894f66d5670bab6215517a94189a9ffc09bc40a589ec04d"
+receipt = networks.provider.get_receipt(txn_hash)
+receipt.show_trace()
+```
+
+In Ape, you can also show the trace for a call.
+Use the `show_trace=` kwarg on a contract call and Ape will display the trace before returning the data.
+
+```python
+token.balanceOf(account, show_trace=True)
+```
+
+**NOTE**: This may not work on all providers, but it should work on common ones such as `ape-hardhat` or `ape-geth`.
+
+## Gas Reports
+
+To view the gas report of a transaction receipt, use the [`ReceiptAPI.show_gas_report()`](../methoddocs/api.html?highlight=receiptapi#ape.api.transactions.ReceiptAPI.show_gas_report) method:
+
+```python
+from ape import networks
+
+txn_hash = "0x053cba5c12172654d894f66d5670bab6215517a94189a9ffc09bc40a589ec04d"
+receipt = networks.provider.get_receipt(txn_hash)
+receipt.show_gas_report()
+```
+
+It will output tables of contracts and methods with gas usages that look like this:
+
+```bash
+                            DAI Gas
+
+  Method           Times called    Min.    Max.    Mean   Median
+ ────────────────────────────────────────────────────────────────
+  balanceOf                   4   1302    13028   1302    1302
+  allowance                   2   1377    1377    1337    1337
+│ approve                     1   22414   22414   22414   22414
+│ burn                        1   11946   11946   11946   11946
+│ mint                        1   25845   25845   25845   25845
+```
+
+## Estimate Gas Cost
+
+To estimate the gas cost on a transaction or call without sending it, use the `estimate_gas_cost()` method from the contract's transaction / call handler:
+(Assume I have a contract instance named `contract_a` that has a method named `methodToCall`)
+
+```python
+txn_cost = contract_a.myMutableMethod.estimate_gas_cost(1, sender=accounts.load("me"))
+print(txn_cost)
+
+view_cost = contract_a.myViewMethod.estimate_gas_cost()
+print(view_cost)
+```
+
+
+######## ./docs\test_accounts.py
+
+import json
+
+import pytest
+from eth_account import Account
+from eth_account.hdaccount import ETHEREUM_DEFAULT_PATH
+
+from tests.integration.cli.utils import assert_failure, run_once
+
+ALIAS = "test"
+PASSWORD = "a"
+PRIVATE_KEY = "0000000000000000000000000000000000000000000000000000000000000001"
+MNEMONIC = "test test test test test test test test test test test junk"
+INVALID_MNEMONIC = "test test"
+CUSTOM_HDPATH = "m/44'/61'/0'/0/0"  # Ethereum Classic ($ETC) HDPath
+
+
+@pytest.fixture(autouse=True)
+def temp_keyfile_path(temp_accounts_path):
+    test_keyfile_path = temp_accounts_path / f"{ALIAS}.json"
+
+    if test_keyfile_path.is_file():
+        # Corrupted from a previous test
+        test_keyfile_path.unlink()
+
+    return test_keyfile_path
+
+
+@pytest.fixture
+def temp_keyfile(temp_keyfile_path, keyparams):
+    temp_keyfile_path.write_text(json.dumps(keyparams))
+
+    yield temp_keyfile_path
+
+    if temp_keyfile_path.is_file():
+        temp_keyfile_path.unlink()
+
+
+@pytest.fixture
+def temp_account():
+    return Account.from_key(bytes.fromhex(PRIVATE_KEY))
+
+
+@pytest.fixture()
+def temp_account_mnemonic_default_hdpath():
+    Account.enable_unaudited_hdwallet_features()
+    return Account.from_mnemonic(MNEMONIC, account_path=ETHEREUM_DEFAULT_PATH)
+
+
+@pytest.fixture()
+def temp_account_mnemonic_custom_hdpath():
+    Account.enable_unaudited_hdwallet_features()
+    return Account.from_mnemonic(MNEMONIC, account_path=CUSTOM_HDPATH)
+
+
+@run_once
+def test_import_valid_private_key(ape_cli, runner, temp_account, temp_keyfile_path):
+    assert not temp_keyfile_path.is_file()
+    # Add account from valid private key
+    result = runner.invoke(
+        ape_cli,
+        ["accounts", "import", ALIAS],
+        input="\n".join([f"0x{PRIVATE_KEY}", PASSWORD, PASSWORD]),
+    )
+    assert result.exit_code == 0, result.output
+    assert temp_account.address in result.output
+    assert ALIAS in result.output
+    assert temp_keyfile_path.is_file()
+
+
+@run_once
+def test_import_alias_is_private_key(ape_cli, runner):
+    # Attempt using private key as the alias.
+    key_alias = f"0x{PRIVATE_KEY}"
+    result = runner.invoke(
+        ape_cli,
+        ["accounts", "import", key_alias],
+        input="\n".join([f"0x{PRIVATE_KEY}", PASSWORD, PASSWORD]),
+    )
+    assert result.exit_code != 0, result.output
+    expected = "ERROR: (AccountsError) Longer aliases cannot be hex strings.\n"
+    assert result.output == expected
+
+
+@run_once
+def test_import_alias_is_really_long(ape_cli, runner):
+    """
+    For entropy related use-cases regarding alias, we
+    must ensure long aliases are supported.
+    """
+
+    long_alias = "this is a long alias that i am going to use and you cant stop me"
+    result = runner.invoke(
+        ape_cli,
+        ["accounts", "import", long_alias],
+        input="\n".join([f"0x{PRIVATE_KEY}", PASSWORD, PASSWORD]),
+    )
+    assert result.exit_code == 0
+
+
+@run_once
+def test_import_invalid_private_key(ape_cli, runner):
+    # Add account from invalid private key
+    result = runner.invoke(
+        ape_cli,
+        ["accounts", "import", ALIAS],
+        input="\n".join(["0xhello", PASSWORD, PASSWORD]),
+    )
+    assert result.exit_code == 1, result.output
+    assert_failure(result, "Key can't be imported: Non-hexadecimal digit found")
+
+
+@run_once
+def test_import_alias_already_in_use(ape_cli, runner):
+    def invoke_import():
+        return runner.invoke(
+            ape_cli,
+            ["accounts", "import", ALIAS],
+            input="\n".join([f"0x{PRIVATE_KEY}", PASSWORD, PASSWORD]),
+        )
+
+    result = invoke_import()
+    assert result.exit_code == 0, result.output
+    result = invoke_import()
+    assert_failure(result, f"Account with alias '{ALIAS}' already in use")
+
+
+@run_once
+def test_import_account_instantiation_failure(mocker, ape_cli, runner):
+    eth_account_from_key_patch = mocker.patch("ape_accounts._cli.EthAccount.from_key")
+    eth_account_from_key_patch.side_effect = Exception("Can't instantiate this account!")
+    result = runner.invoke(
+        ape_cli,
+        ["accounts", "import", ALIAS],
+        input="\n".join([f"0x{PRIVATE_KEY}", PASSWORD, PASSWORD]),
+    )
+    assert_failure(result, "Key can't be imported: Can't instantiate this account!")
+
+
+@run_once
+def test_import_mnemonic_default_hdpath(
+    ape_cli, runner, temp_account_mnemonic_default_hdpath, temp_keyfile_path
+):
+    assert not temp_keyfile_path.is_file()
+    # Add account from mnemonic with default hdpath of ETHEREUM_DEFAULT_PATH
+    result = runner.invoke(
+        ape_cli,
+        ["accounts", "import", "--use-mnemonic", ALIAS],
+        input="\n".join([f"{MNEMONIC}", PASSWORD, PASSWORD]),
+    )
+    assert result.exit_code == 0, result.output
+    assert temp_account_mnemonic_default_hdpath.address in result.output
+    assert ALIAS in result.output
+    assert temp_keyfile_path.is_file()
+
+
+@run_once
+def test_import_mnemonic_custom_hdpath(
+    ape_cli, runner, temp_account_mnemonic_custom_hdpath, temp_keyfile_path
+):
+    assert not temp_keyfile_path.is_file()
+    # Add account from mnemonic with custom hdpath
+    result = runner.invoke(
+        ape_cli,
+        ["accounts", "import", ALIAS, "--use-mnemonic", "--hd-path", CUSTOM_HDPATH],
+        input="\n".join([f"{MNEMONIC}", PASSWORD, PASSWORD]),
+    )
+    assert result.exit_code == 0, result.output
+    assert temp_account_mnemonic_custom_hdpath.address in result.output
+    assert ALIAS in result.output
+    assert temp_keyfile_path.is_file()
+
+
+@run_once
+def test_export(ape_cli, runner, temp_keyfile):
+    address = json.loads(temp_keyfile.read_text())["address"]
+    # export key
+    result = runner.invoke(
+        ape_cli,
+        ["accounts", "export", ALIAS],
+        input="\n".join([PASSWORD, PASSWORD]),
+    )
+    assert result.exit_code == 0, result.output
+    assert f"0x{PRIVATE_KEY}" in result.output
+    assert address in result.output
+
+
+@run_once
+def test_import_invalid_mnemonic(ape_cli, runner):
+    # Add account from invalid mnemonic
+    result = runner.invoke(
+        ape_cli,
+        ["accounts", "import", "--use-mnemonic", ALIAS],
+        input="\n".join([f"{INVALID_MNEMONIC}", PASSWORD, PASSWORD]),
+    )
+    assert result.exit_code == 1, result.output
+    assert_failure(
+        result,
+        f"Seed phrase can't be imported: Provided words: '{INVALID_MNEMONIC}'"
+        + ", are not a valid BIP39 mnemonic phrase!",
+    )
+
+
+@run_once
+def test_generate_default(ape_cli, runner, temp_keyfile_path):
+    assert not temp_keyfile_path.is_file()
+    # Generate new private key
+    show_mnemonic = ""
+    result = runner.invoke(
+        ape_cli,
+        ["accounts", "generate", ALIAS],
+        input="\n".join(["random entropy", show_mnemonic, PASSWORD, PASSWORD]),
+    )
+    assert result.exit_code == 0, result.output
+    assert "Newly generated mnemonic is" in result.output
+    mnemonic_length = len(result.output.split(":")[4].split("\n")[0].split())
+    assert mnemonic_length == 12
+    assert ETHEREUM_DEFAULT_PATH in result.output
+    assert ALIAS in result.output
+    assert temp_keyfile_path.is_file()
+
+
+@run_once
+def test_generate_hide_mnemonic_prompt(ape_cli, runner, temp_keyfile_path):
+    assert not temp_keyfile_path.is_file()
+    # Generate new private key
+    show_mnemonic = "n"
+    result = runner.invoke(
+        ape_cli,
+        ["accounts", "generate", ALIAS],
+        input="\n".join(["random entropy", show_mnemonic, PASSWORD, PASSWORD]),
+    )
+    assert result.exit_code == 0, result.output
+    assert "Newly generated mnemonic is" not in result.output
+    assert ETHEREUM_DEFAULT_PATH in result.output
+    assert ALIAS in result.output
+    assert temp_keyfile_path.is_file()
+
+
+@run_once
+def test_generate_hide_mnemonic_option(ape_cli, runner, temp_keyfile_path):
+    assert not temp_keyfile_path.is_file()
+    # Generate new private key
+    result = runner.invoke(
+        ape_cli,
+        ["accounts", "generate", ALIAS, "--hide-mnemonic"],
+        input="\n".join(["random entropy", PASSWORD, PASSWORD]),
+    )
+    assert result.exit_code == 0, result.output
+    assert "Newly generated mnemonic is" not in result.output
+    assert ETHEREUM_DEFAULT_PATH in result.output
+    assert ALIAS in result.output
+    assert temp_keyfile_path.is_file()
+
+
+@run_once
+def test_generate_24_words(ape_cli, runner, temp_keyfile_path):
+    assert not temp_keyfile_path.is_file()
+    # Generate new private key
+    show_mnemonic = ""
+    word_count = 24
+    result = runner.invoke(
+        ape_cli,
+        ["accounts", "generate", ALIAS, "--word-count", word_count],
+        input="\n".join(["random entropy", show_mnemonic, PASSWORD, PASSWORD]),
+    )
+    assert result.exit_code == 0, result.output
+    assert "Newly generated mnemonic is" in result.output
+    mnemonic_length = len(result.output.split(":")[4].split("\n")[0].split())
+    assert mnemonic_length == word_count
+    assert ETHEREUM_DEFAULT_PATH in result.output
+    assert ALIAS in result.output
+    assert temp_keyfile_path.is_file()
+
+
+@run_once
+def test_generate_custom_hdpath(ape_cli, runner, temp_keyfile_path):
+    assert not temp_keyfile_path.is_file()
+    # Generate new private key
+    show_mnemonic = ""
+    result = runner.invoke(
+        ape_cli,
+        ["accounts", "generate", ALIAS, "--hd-path", CUSTOM_HDPATH],
+        input="\n".join(["random entropy", show_mnemonic, PASSWORD, PASSWORD]),
+    )
+    assert result.exit_code == 0, result.output
+    assert "Newly generated mnemonic is" in result.output
+    mnemonic_length = len(result.output.split(":")[4].split("\n")[0].split())
+    assert mnemonic_length == 12
+    assert CUSTOM_HDPATH in result.output
+    assert ALIAS in result.output
+    assert temp_keyfile_path.is_file()
+
+
+@run_once
+def test_generate_24_words_and_custom_hdpath(ape_cli, runner, temp_keyfile_path):
+    assert not temp_keyfile_path.is_file()
+    # Generate new private key
+    show_mnemonic = ""
+    word_count = 24
+    result = runner.invoke(
+        ape_cli,
+        ["accounts", "generate", ALIAS, "--word-count", word_count, "--hd-path", CUSTOM_HDPATH],
+        input="\n".join(["random entropy", show_mnemonic, PASSWORD, PASSWORD]),
+    )
+    assert result.exit_code == 0, result.output
+    assert "Newly generated mnemonic is" in result.output
+    mnemonic_length = len(result.output.split(":")[4].split("\n")[0].split())
+    assert mnemonic_length == word_count
+    assert CUSTOM_HDPATH in result.output
+    assert ALIAS in result.output
+    assert temp_keyfile_path.is_file()
+
+
+@run_once
+def test_generate_alias_already_in_use(ape_cli, runner):
+    def invoke_generate():
+        show_mnemonic = ""
+        return runner.invoke(
+            ape_cli,
+            ["accounts", "generate", ALIAS],
+            input="\n".join(["random entropy", show_mnemonic, PASSWORD, PASSWORD]),
+        )
+
+    result = invoke_generate()
+    assert result.exit_code == 0, result.output
+    result = invoke_generate()
+    assert_failure(result, f"Account with alias '{ALIAS}' already in use")
+
+
+@run_once
+def test_list(ape_cli, runner, temp_keyfile):
+    # Check availability
+    assert temp_keyfile.is_file()
+    result = runner.invoke(ape_cli, ["accounts", "list"], catch_exceptions=False)
+    assert ALIAS in result.output
+
+    # NOTE: the un-checksummed version of this address is found in the temp_keyfile fixture.
+    expected_address = "0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf"
+    assert expected_address in result.output
+
+
+@run_once
+def test_list_all(ape_cli, runner, temp_keyfile):
+    # Check availability
+    assert temp_keyfile.is_file()
+    result = runner.invoke(ape_cli, ["accounts", "list", "--all"])
+    assert ALIAS in result.output
+
+
+@run_once
+def test_change_password(ape_cli, runner, temp_keyfile):
+    assert temp_keyfile.is_file()
+    # Delete Account (`N` for "Leave unlocked?")
+    valid_input = [PASSWORD, "N", "b", "b"]
+    result = runner.invoke(
+        ape_cli,
+        ["accounts", "change-password", ALIAS],
+        input="\n".join(valid_input) + "\n",
+    )
+    assert result.exit_code == 0, result.output
+
+
+@run_once
+def test_delete(ape_cli, runner, temp_keyfile):
+    assert temp_keyfile.is_file()
+    # Delete Account
+    result = runner.invoke(ape_cli, ["accounts", "delete", ALIAS], input=f"{PASSWORD}\n")
+    assert result.exit_code == 0, result.output
+    assert not temp_keyfile.is_file()
+
+
+######## ./docs\test_cache.py
+
+def test_cache_init_purge(ape_cli, runner):
+    result = runner.invoke(ape_cli, ["cache", "init", "--network", "ethereum:goerli"])
+    assert result.output == "SUCCESS: Caching database initialized for ethereum:goerli.\n"
+    result = runner.invoke(ape_cli, ["cache", "purge", "--network", "ethereum:goerli"])
+    assert result.output == "SUCCESS: Caching database purged for ethereum:goerli.\n"
+
+
+######## ./docs\test_compile.py
+
+import re
+import shutil
+
+import pytest
+
+from ape.contracts import ContractContainer
+
+from .utils import skip_projects, skip_projects_except
+
+skip_non_compilable_projects = skip_projects(
+    "empty-config",
+    "no-config",
+    "script",
+    "only-dependencies",
+    "bad-contracts",
+    "test",
+    "geth",
+)
+
+
+@skip_projects(
+    "geth",
+    "multiple-interfaces",
+    "only-dependencies",
+    "test",
+    "bad-contracts",
+    "with-dependencies",
+    "with-contracts",
+)
+def test_compile_missing_contracts_dir(ape_cli, runner, project):
+    arg_lists = [["compile"], ["compile", "--include-dependencies"]]
+    for arg_list in arg_lists:
+        result = runner.invoke(ape_cli, arg_list)
+        assert result.exit_code == 0, result.output
+        assert "WARNING" in result.output, f"Detected contracts folder in '{project.path.name}'"
+        assert "Nothing to compile" in result.output
+
+
+@skip_projects_except("bad-contracts")
+def test_skip_contracts_and_missing_compilers(ape_cli, runner, project, switch_config):
+    result = runner.invoke(ape_cli, ["compile", "--force"])
+    assert "INFO: Compiling 'subdir/tsconfig.json'." not in result.output
+    assert "INFO: Compiling 'package.json'." not in result.output
+
+    # NOTE: `.md` should NOT appear in this list!
+    assert (
+        "WARNING: Missing compilers for the following file types: '.foo, .foobar, .test'. "
+        "Possibly, a compiler plugin is not installed or is installed but not loading correctly."
+    ) in result.output
+
+    # Simulate configuring Ape to not ignore tsconfig.json for some reason.
+    content = """
+    compiler:
+      ignore_files:
+        - "*package.json"
+    """
+    with switch_config(project, content):
+        result = runner.invoke(ape_cli, ["compile", "--force"])
+        assert "INFO: Compiling 'subdir/tsconfig.json'." in result.output
+
+
+@skip_non_compilable_projects
+def test_compile(ape_cli, runner, project, clean_cache):
+    result = runner.invoke(ape_cli, ["compile"], catch_exceptions=False)
+    assert result.exit_code == 0, result.output
+
+    # First time it compiles, it compiles the files with registered compilers successfully.
+    # Files with multiple extensions are currently not supported.
+    all_files = [f for f in project.path.glob("contracts/**/*")]
+
+    # Don't expect directories that may happen to have `.json` in name
+    # as well as hidden files, such as `.gitkeep`. Both examples are present
+    # in the test project!
+    expected_files = [
+        f
+        for f in all_files
+        if f.name.count(".") == 1 and f.is_file() and not f.name.startswith(".")
+    ]
+    unexpected_files = [f for f in all_files if f not in expected_files]
+
+    manifest = project.extract_manifest()
+    for file in expected_files:
+        assert file.name in manifest.sources
+
+    assert all([f.stem in result.output for f in expected_files])
+    assert not any([f.stem in result.output for f in unexpected_files])
+
+    result = runner.invoke(ape_cli, ["compile"], catch_exceptions=False)
+    assert result.exit_code == 0, result.output
+    # First time it compiles, it caches
+    for file in project.path.glob("contracts/**/*"):
+        assert file.stem not in result.output
+
+
+@skip_projects_except("multiple-interfaces")
+def test_compile_when_sources_change(ape_cli, runner, project, clean_cache):
+    result = runner.invoke(ape_cli, ["compile"], catch_exceptions=False)
+    assert result.exit_code == 0, result.output
+    assert "Compiling 'Interface.json'" in result.output
+
+    # Change the contents of a file
+    source_path = project.contracts_folder / "Interface.json"
+    modified_source_text = source_path.read_text().replace("foo", "bar")
+    source_path.unlink()
+    source_path.touch()
+    source_path.write_text(modified_source_text)
+
+    result = runner.invoke(ape_cli, ["compile"], catch_exceptions=False)
+    assert result.exit_code == 0, result.output
+    assert "Compiling 'Interface.json'" in result.output
+
+    # Verify that the next time, it does not need to recompile (no changes)
+    result = runner.invoke(ape_cli, ["compile"], catch_exceptions=False)
+    assert result.exit_code == 0, result.output
+    assert "Compiling 'Interface.json'" not in result.output
+
+
+@skip_projects_except("multiple-interfaces")
+def test_compile_when_contract_type_collision(ape_cli, runner, project, clean_cache):
+    source_path = project.contracts_folder / "Interface.json"
+    temp_dir = project.contracts_folder / "temp"
+    source_copy = temp_dir / "Interface.json"
+    expected = (
+        r"ERROR: \(CompilerError\) ContractType collision between sources '"
+        r"([\w\/]+\.json)' and '([\w\/]+\.json)'\."
+    )
+    temp_dir.mkdir()
+    try:
+        source_copy.touch()
+        source_copy.write_text(source_path.read_text())
+        result = runner.invoke(ape_cli, ["compile"], catch_exceptions=False)
+        assert result.exit_code == 1
+        actual = result.output
+        search_result = re.search(expected, actual)
+        assert search_result, actual
+        groups = search_result.groups()
+        assert {groups[0], groups[1]} == {"Interface.json", "temp/Interface.json"}
+
+    finally:
+        if temp_dir.is_dir():
+            shutil.rmtree(temp_dir)
+
+
+@skip_projects_except("multiple-interfaces")
+def test_compile_when_source_contains_return_characters(ape_cli, runner, project, clean_cache):
+    """
+    This tests a bugfix where a source file contained return-characters
+    and that triggered endless re-compiles because it technically contains extra
+    bytes than the ones that show up in the text.
+    """
+    source_path = project.contracts_folder / "Interface.json"
+    # Change the contents of a file to contain the '\r' character.
+    modified_source_text = f"{source_path.read_text()}\r"
+    source_path.unlink()
+    source_path.touch()
+    source_path.write_text(modified_source_text)
+
+    result = runner.invoke(ape_cli, ["compile"], catch_exceptions=False)
+    assert result.exit_code == 0, result.output
+    assert "Compiling 'Interface.json'" in result.output
+
+    # Verify that the next time, it does not need to recompile (no changes)
+    result = runner.invoke(ape_cli, ["compile"], catch_exceptions=False)
+    assert result.exit_code == 0, result.output
+    assert "Compiling 'Interface.json'" not in result.output
+
+
+@skip_projects_except("multiple-interfaces")
+def test_can_access_contracts(project, clean_cache):
+    # This test does not use the CLI but still requires a project or run off of.
+    assert project.Interface, "Unable to access contract when needing to compile"
+    assert project.Interface, "Unable to access contract when not needing to compile"
+
+
+@skip_projects_except("multiple-interfaces")
+@pytest.mark.parametrize(
+    "contract_path",
+    ("Interface", "Interface.json", "contracts/Interface", "contracts/Interface.json"),
+)
+def test_compile_specified_contracts(ape_cli, runner, project, contract_path, clean_cache):
+    result = runner.invoke(ape_cli, ["compile", contract_path], catch_exceptions=False)
+    assert result.exit_code == 0, result.output
+    assert "Compiling 'Interface.json'" in result.output
+
+
+@skip_projects_except("multiple-interfaces")
+def test_compile_unknown_extension_does_not_compile(ape_cli, runner, project, clean_cache):
+    result = runner.invoke(
+        ape_cli, ["compile", "Interface.js"], catch_exceptions=False
+    )  # Suffix to existing extension
+    assert result.exit_code == 2, result.output
+    assert "Error: Contract 'Interface.js' not found." in result.output
+
+
+@skip_projects_except()
+def test_compile_contracts(ape_cli, runner, project):
+    result = runner.invoke(ape_cli, ["compile", "--size"], catch_exceptions=False)
+    assert result.exit_code == 0, result.output
+    # Still caches but displays bytecode size
+    for file in project.path.glob("contracts/**/*"):
+        assert file.stem in result.output
+
+
+@skip_projects_except("with-dependencies")
+@pytest.mark.parametrize(
+    "contract_path",
+    (None, "contracts/", "Project", "contracts/Project.json"),
+)
+def test_compile_with_dependency(ape_cli, runner, project, contract_path):
+    cmd = ["compile", "--force"]
+
+    if contract_path:
+        cmd.append(contract_path)
+
+    result = runner.invoke(ape_cli, cmd, catch_exceptions=False)
+    assert result.exit_code == 0, result.output
+    for name in (
+        "default",
+        "renamed-contracts-folder",
+        "containing-sub-dependencies",
+        "renamed-complex-contracts-folder",
+        "renamed-contracts-folder-specified-in-config",
+    ):
+        assert name in list(project.dependencies.keys())
+        assert type(project.dependencies[name]["local"]["name"]) is ContractContainer
+
+
+@skip_projects_except("with-dependencies")
+def test_compile_individual_contract_excludes_other_contract(ape_cli, runner, project):
+    result = runner.invoke(ape_cli, ["compile", "Project", "--force"], catch_exceptions=False)
+    assert result.exit_code == 0, result.output
+    assert "Other" not in result.output
+
+
+@skip_projects_except("with-dependencies")
+def test_compile_non_ape_project_deletes_ape_config_file(ape_cli, runner, project):
+    ape_config = project.path / "default" / "ape-config.yaml"
+    if ape_config.is_file():
+        # Corrupted from a previous test.
+        ape_config.unlink()
+
+    result = runner.invoke(ape_cli, ["compile", "Project", "--force"], catch_exceptions=False)
+    assert result.exit_code == 0, result.output
+    assert "ape-config.yaml" not in [f.name for f in (project.path / "default").iterdir()]
+
+
+@skip_projects_except("only-dependencies")
+def test_compile_only_dependency(ape_cli, runner, project, clean_cache, caplog):
+    expected_log_message = "Compiling 'DependencyInProjectOnly.json'"
+    dependency_cache = project.path / "renamed_contracts_folder" / ".build"
+    if dependency_cache.is_dir():
+        shutil.rmtree(str(dependency_cache))
+
+    result = runner.invoke(ape_cli, ["compile", "--force"], catch_exceptions=False)
+    assert result.exit_code == 0, result.output
+
+    # Dependencies are not compiled automatically
+    assert expected_log_message not in result.output
+
+    # Trigger actual dependency compilation
+    dependency = project.dependencies["dependency-in-project-only"]["local"]
+    _ = dependency.DependencyInProjectOnly
+    log_record = caplog.records.pop()
+    assert expected_log_message in log_record.message
+
+    # It should not need to compile again.
+    _ = dependency.DependencyInProjectOnly
+    if caplog.records:
+        log_record = caplog.records.pop()
+        assert expected_log_message not in log_record.message, "Compiled twice!"
+
+    # Force a re-compile and trigger the dependency to compile via CLI
+    result = runner.invoke(
+        ape_cli, ["compile", "--force", "--include-dependencies"], catch_exceptions=False
+    )
+    assert result.exit_code == 0, result.output
+    assert expected_log_message in result.output
+
+    # Make sure the config option works
+    config_file = project.path / "ape-config.yaml"
+    text = config_file.read_text()
+    try:
+        text = text.replace("  include_dependencies: false", "  include_dependencies: true")
+        config_file.unlink()
+        config_file.write_text(text)
+        project.config_manager.load(force_reload=True)
+        result = runner.invoke(ape_cli, ["compile", "--force"], catch_exceptions=False)
+        assert result.exit_code == 0, result.output
+        assert expected_log_message in result.output
+    finally:
+        text.replace("  include_dependencies: true", "  include_dependencies: false")
+        project.config_manager.load(force_reload=True)
+
+
+@skip_projects_except("with-contracts")
+def test_raw_compiler_output_bytecode(ape_cli, runner, project):
+    assert project.RawVyperOutput.contract_type.runtime_bytecode.bytecode
+    assert project.RawSolidityOutput.contract_type.deployment_bytecode.bytecode
+
+
+@skip_projects_except("with-contracts")
+def test_compile_after_deleting_cache_file(ape_cli, runner, project):
+    assert project.RawVyperOutput
+    path = project.local_project._cache_folder / "RawVyperOutput.json"
+    path.unlink()
+
+    # Should still work (will have to figure it out its missing and put back).
+    assert project.RawVyperOutput
+
+
+######## ./docs\test_console.py
+
+import pytest
+
+from ape import __all__
+from tests.integration.cli.utils import skip_projects, skip_projects_except
+
+data_and_project_folders = pytest.mark.parametrize("folder", ["PROJECT_FOLDER", "DATA_FOLDER"])
+
+# Simple single namespace example
+EXTRAS_SCRIPT_1 = """
+A = 1
+def a():
+    return A
+"""
+
+# Tests ape_init_extras function alters namespace
+EXTRAS_SCRIPT_2 = """
+A = 1
+
+def ape_init_extras():
+    global A
+    A = 2
+"""
+
+# Tests that namespace kwargs are available
+EXTRAS_SCRIPT_3 = """
+def ape_init_extras(project):
+    assert project
+"""
+
+# Tests that returned dict is added to namespace
+EXTRAS_SCRIPT_4 = """
+B = 4
+
+def ape_init_extras():
+    return {"A": 1, "B": 2}
+"""
+
+# Tests that we can import a local package
+EXTRAS_SCRIPT_5 = """
+from dependency_in_project_only.importme import import_me
+
+import_me()
+"""
+
+
+def no_console_error(result):
+    return (
+        "NameError" not in result.output
+        and "AssertionError" not in result.output
+        and "ModuleNotFoundError" not in result.output
+    )
+
+
+def write_ape_console_extras(project, folder, contents):
+    extras_file = getattr(project.config_manager, folder).joinpath("ape_console_extras.py")
+    extras_file.write_text(contents)
+    return extras_file
+
+
+@pytest.fixture(autouse=True)
+def clean_console_rc_write(project):
+    yield
+
+    global_extras = project.config_manager.DATA_FOLDER.joinpath("ape_console_extras.py")
+    if global_extras.is_file():
+        global_extras.unlink()
+
+    project_extras = project.config_manager.PROJECT_FOLDER.joinpath("ape_console_extras.py")
+    if project_extras.is_file():
+        project_extras.unlink()
+
+
+# NOTE: We export `__all__` into the IPython session that the console runs in
+@skip_projects("geth")
+@pytest.mark.parametrize("item", __all__)
+def test_console(ape_cli, runner, item):
+    result = runner.invoke(ape_cli, ["console"], input=f"{item}\nexit\n", catch_exceptions=False)
+    assert result.exit_code == 0, result.output
+    assert no_console_error(result), result.output
+    result = runner.invoke(
+        ape_cli,
+        ["console", "-v", "debug"],
+        input=f"{item}\nexit\n",
+        catch_exceptions=False,
+    )
+    assert result.exit_code == 0, result.output
+    assert no_console_error(result), result.output
+
+
+@skip_projects("geth")
+@data_and_project_folders
+def test_console_extras(project, folder, ape_cli, runner):
+    write_ape_console_extras(project, folder, EXTRAS_SCRIPT_1)
+
+    result = runner.invoke(
+        ape_cli,
+        ["console"],
+        input="\n".join(["assert A == 1", "exit"]) + "\n",
+        catch_exceptions=False,
+    )
+    assert result.exit_code == 0, result.output
+    assert no_console_error(result), result.output
+
+    result = runner.invoke(
+        ape_cli,
+        ["console"],
+        input="\n".join(["assert a() == 1", "exit"]) + "\n",
+        catch_exceptions=False,
+    )
+    assert result.exit_code == 0, result.output
+    assert no_console_error(result), result.output
+
+
+@skip_projects("geth")
+@data_and_project_folders
+def test_console_init_extras(project, folder, ape_cli, runner):
+    write_ape_console_extras(project, folder, EXTRAS_SCRIPT_2)
+    result = runner.invoke(
+        ape_cli,
+        ["console"],
+        input="print('a:', A)\nassert A == 2\nexit\n",
+        catch_exceptions=False,
+    )
+    assert result.exit_code == 0, result.output
+    assert no_console_error(result), result.output
+
+
+@skip_projects("geth")
+@data_and_project_folders
+def test_console_init_extras_kwargs(project, folder, ape_cli, runner):
+    write_ape_console_extras(project, folder, EXTRAS_SCRIPT_3)
+
+    result = runner.invoke(ape_cli, ["console"], input="exit\n", catch_exceptions=False)
+    assert result.exit_code == 0, result.output
+    assert no_console_error(result), result.output
+
+
+@skip_projects("geth")
+@data_and_project_folders
+def test_console_init_extras_return(project, folder, ape_cli, runner):
+    write_ape_console_extras(project, folder, EXTRAS_SCRIPT_4)
+
+    # Test asserts returned A exists and B is not overwritten
+    result = runner.invoke(
+        ape_cli,
+        ["console"],
+        input="\n".join(
+            [
+                "assert A == 1, 'unexpected A'",
+                # symbols from ape_init_extras should apply before file namespace
+                "assert B == 2, 'unexpected B'",
+                "exit",
+            ]
+        )
+        + "\n",
+        catch_exceptions=False,
+    )
+    assert result.exit_code == 0, result.output
+    assert no_console_error(result), result.output
+
+
+@skip_projects_except("only-dependencies")
+def test_console_import_local_path(project, ape_cli, runner):
+    result = runner.invoke(
+        ape_cli,
+        ["console"],
+        input="\n".join(["from dependency_in_project_only.importme import import_me", "exit"])
+        + "\n",
+    )
+    assert result.exit_code == 0, result.output
+    assert no_console_error(result), result.output
+
+
+@skip_projects_except("only-dependencies")
+def test_console_import_local_path_in_extras_file(project, ape_cli, runner):
+    write_ape_console_extras(project, "PROJECT_FOLDER", EXTRAS_SCRIPT_5)
+
+    result = runner.invoke(
+        ape_cli,
+        ["console"],
+        input="exit\n",
+        catch_exceptions=False,
+    )
+    assert result.exit_code == 0, result.output
+    assert no_console_error(result), result.output
+
+
+@skip_projects_except("only-dependencies")
+def test_console_ape_magic(ape_cli, runner):
+    result = runner.invoke(
+        ape_cli,
+        ["console"],
+        input="%load_ext ape_console.plugin\n%ape--help\nexit\n",
+        catch_exceptions=False,
+    )
+    assert result.exit_code == 0, result.output
+    assert no_console_error(result), result.output
+
+
+@skip_projects_except("only-dependencies")
+def test_console_bal_magic(ape_cli, runner, keyfile_account):
+    cases = (
+        "%load_ext ape_console.plugin",
+        "%bal acct",
+        "%bal acct.alias",
+        "%bal acct.address",
+        "%bal int(acct.address, 16)",
+    )
+    cmd_ls = [f"acct = accounts.load('{keyfile_account.alias}')", *cases, "exit"]
+    cmd_str = "\n".join(cmd_ls)
+    result = runner.invoke(
+        ape_cli,
+        ["console"],
+        input=f"{cmd_str}\n",
+        catch_exceptions=False,
+    )
+    assert result.exit_code == 0, result.output
+    assert no_console_error(result), result.output
+
+
+@skip_projects_except("with-contracts")
+def test_uncaught_txn_err(ape_cli, runner, mocker):
+    # For some reason, not showing in result.output, so captured another way.
+    handler = mocker.patch("ape_console.plugin.handle_ape_exception")
+    cmd_ls = [
+        "%load_ext ape_console.plugin",
+        "account = accounts.test_accounts[0]",
+        "contract = account.deploy(project.ContractA)",
+        "receipt = contract.setNumber(5, sender=account)",
+        "print(receipt)",
+        "exit",
+    ]
+    cmd_str = "\n".join(cmd_ls)
+    runner.invoke(
+        ape_cli,
+        ["console"],
+        input=f"{cmd_str}\n",
+        catch_exceptions=False,
+    )
+    err = handler.call_args[0][0]
+    assert str(err) == "Transaction failed."
+
+
+######## ./docs\test_init.py
+
+import os
+
+from tests.integration.cli.utils import run_once
+
+"""
+The purpose of this unit test is to test the funcationality of `ape init`
+
+It should test the creation of directories, config.yaml, and .gitginore:
+contracts
+test
+scripts
+ape-config.yaml
+.gitignore
+"""
+
+
+@run_once
+def test_init_success(ape_cli, runner, project):
+    # Successfull creation of project
+    # ape init command
+
+    # Changes cwd to a temporary directory
+    project_folder_path = project.path / "init_success"
+    project_folder_path.mkdir()
+    os.chdir(str(project_folder_path))
+
+    try:
+        result = runner.invoke(ape_cli, ["init"], input="\n".join(["init_success"]))
+
+        assert result.exit_code == 0, result.output
+        # checks if the directory exist
+        for folder_name in ["contracts", "tests", "scripts"]:
+            folder = project_folder_path / folder_name
+            assert folder.is_dir()
+
+        # checks if the files exist
+        git_ignore_file = project_folder_path / ".gitignore"
+        assert git_ignore_file.is_file()
+        assert ".env" in git_ignore_file.read_text()
+
+        config = project_folder_path / "ape-config.yaml"
+        assert config.is_file()
+        assert "init_success" in config.read_text()
+
+    finally:
+        os.chdir(project.path)
+
+
+@run_once
+def test_fail_all_files_and_folders_exist(ape_cli, runner, project):
+    # failed to create all folders because they exist
+    # ape init command
+
+    # add project folder and directories
+    project_folder_path = project.path / "init_fail"
+    project_folder_path.mkdir()
+    os.chdir(str(project_folder_path))
+
+    try:
+        for folder_name in ["contracts", "tests", "scripts"]:
+            # Create target Directory
+            folder = project_folder_path / folder_name
+            if folder.exists():
+                pass
+            else:
+                folder.mkdir(exist_ok=False)
+
+        result = runner.invoke(ape_cli, ["init"], input="\n".join(["init_fail"]))
+        # checks if the directory existence
+        assert result.exit_code == 0, result.output
+        assert "contracts' exists" in result.output
+        assert "scripts' exists" in result.output
+        assert "tests' exists" in result.output
+
+    finally:
+        os.chdir(project.path)
+
+
+######## ./docs\test_misc.py
+
+import pytest
+
+from tests.integration.cli.utils import run_once
+
+
+# NOTE: test all the things without a direct test elsewhere
+@run_once
+@pytest.mark.parametrize(
+    "args",
+    (
+        [],
+        ["--version"],
+        ["--config"],
+        ["--help"],
+        ["accounts"],
+        ["networks"],
+        ["networks", "list"],
+        ["plugins"],
+    ),
+)
+def test_invocation(ape_cli, runner, args):
+    result = runner.invoke(ape_cli, args)
+    assert result.exit_code == 0, result.output
+
+
+######## ./docs\test_networks.py
+
+from ape.api.networks import LOCAL_NETWORK_NAME
+from tests.conftest import GETH_URI
+
+from .utils import run_once, skip_projects_except
+
+_DEFAULT_NETWORKS_TREE = """
+ethereum  (default)
+├── mainnet
+│   └── geth  (default)
+├── goerli
+│   └── geth  (default)
+├── sepolia
+│   └── geth  (default)
+└── local  (default)
+    ├── geth
+    └── test  (default)
+"""
+_DEFAULT_NETWORKS_YAML = """
+ecosystems:
+- name: ethereum
+  isDefault: true
+  networks:
+  - name: mainnet
+    providers:
+    - name: geth
+      isDefault: true
+  - name: mainnet-fork
+    providers: []
+  - name: goerli
+    providers:
+    - name: geth
+      isDefault: true
+  - name: goerli-fork
+    providers: []
+  - name: sepolia
+    providers:
+    - name: geth
+      isDefault: true
+  - name: sepolia-fork
+    providers: []
+  - name: local
+    isDefault: true
+    providers:
+    - name: geth
+    - name: test
+      isDefault: true
+"""
+_GETH_NETWORKS_TREE = """
+ethereum  (default)
+├── mainnet
+│   └── geth  (default)
+├── goerli
+│   └── geth  (default)
+└── local  (default)
+    ├── geth  (default)
+    └── test
+"""
+_TEST_PROVIDER_TREE_OUTPUT = """
+ethereum  (default)
+└── local  (default)
+    └── test  (default)
+"""
+_GOERLI_NETWORK_TREE_OUTPUT = """
+ethereum  (default)
+└── goerli
+    └── geth  (default)
+"""
+
+
+def assert_rich_text(actual: str, expected: str):
+    """
+    The output from `rich` causes a bunch of extra spaces to
+    appear at the end of each line. For easier testing, we remove those here.
+    Also, we ignore whether the expected line is at the end or in the middle
+    of the output to handle cases when the test-runner has additional plugins
+    installed.
+    """
+    expected_lines = [
+        x.replace("└", "").replace("├", "").replace("│", "").strip()
+        for x in expected.strip().split("\n")
+    ]
+    actual_lines = [
+        x.replace("└", "").replace("├", "").replace("│", "").strip()
+        for x in actual.strip().split("\n")
+    ]
+
+    for expected_line in expected_lines:
+        assert expected_line in actual_lines
+
+
+@run_once
+def test_list(ape_cli, runner):
+    result = runner.invoke(ape_cli, ["networks", "list"])
+    assert_rich_text(result.output, _DEFAULT_NETWORKS_TREE)
+
+
+@run_once
+def test_list_yaml(ape_cli, runner):
+    result = runner.invoke(ape_cli, ["networks", "list", "--format", "yaml"])
+    expected_lines = _DEFAULT_NETWORKS_YAML.strip().split("\n")
+
+    for expected_line in expected_lines:
+        if expected_line.lstrip() == "providers: []":
+            # Skip these lines in case test-runner has installed providers
+            continue
+
+        assert expected_line in result.output
+
+
+@skip_projects_except("geth")
+def test_geth(ape_cli, runner, networks):
+    result = runner.invoke(ape_cli, ["networks", "list"])
+    assert_rich_text(result.output, _GETH_NETWORKS_TREE)
+
+    # Assert that URI still exists for local network
+    # (was bug where one network's URI disappeared when setting different network's URI)
+    geth_provider = networks.get_provider_from_choice(f"ethereum:{LOCAL_NETWORK_NAME}:geth")
+    actual = geth_provider.uri
+    assert actual == GETH_URI
+
+
+@run_once
+def test_filter_networks(ape_cli, runner, networks):
+    result = runner.invoke(ape_cli, ["networks", "list", "--network", "goerli"])
+    assert_rich_text(result.output, _GOERLI_NETWORK_TREE_OUTPUT)
+
+
+@run_once
+def test_filter_providers(ape_cli, runner, networks):
+    result = runner.invoke(ape_cli, ["networks", "list", "--provider", "test"])
+    assert_rich_text(result.output, _TEST_PROVIDER_TREE_OUTPUT)
+
+
+@run_once
+def test_node_not_subprocess_provider(ape_cli, runner):
+    result = runner.invoke(ape_cli, ["networks", "run", "--network", "ethereum:local:test"])
+    assert result.exit_code != 0
+    assert (
+        result.output
+        == "ERROR: `ape networks run` requires a provider that manages a process, not 'test'.\n"
+    )
+
+
+######## ./docs\test_plugins.py
+
+from typing import List, Tuple
+
+import pytest
+
+from tests.integration.cli.utils import github_xfail
+
+TEST_PLUGIN_NAME = "tokens"
+
+
+class PluginsList(list):
+    def __init__(self, header: str, lines: List[str]):
+        self.header = header
+        self.contains_version = len(lines[0].split(" ")) > 1 if lines else False
+        names = [x.split(" ")[0].strip() for x in lines]
+        super().__init__(names)
+
+
+class ListResult:
+    CORE_KEY = "Installed Core Plugins:"
+    INSTALLED_KEY = "Installed Plugins:"
+    AVAILABLE_KEY = "Available Plugins:"
+
+    def __init__(self, lines: List[str]):
+        self._lines = lines
+
+    @classmethod
+    def parse_output(cls, output: str) -> "ListResult":
+        lines = [x.strip() for x in output.split("\n") if x.strip()]
+
+        # Any line that may start the output
+        start_lines = (
+            "No plugins installed. Use '--all' to see available plugins.",
+            cls.CORE_KEY,
+            cls.INSTALLED_KEY,
+        )
+        start_index = _get_next_index(lines, start_lines)
+        return ListResult(lines[start_index:])
+
+    @property
+    def core_plugins(self) -> PluginsList:
+        # These tests currently always assume an installed plugins
+        if self.CORE_KEY not in self._lines:
+            return PluginsList(self.CORE_KEY, [])
+
+        end_index = self._get_next_index((self.INSTALLED_KEY, self.AVAILABLE_KEY), default=1)
+        plugins = _clean(self._lines[1:end_index])
+        return PluginsList(self.CORE_KEY, plugins)
+
+    @property
+    def installed_plugins(self) -> PluginsList:
+        if self.INSTALLED_KEY not in self._lines:
+            return PluginsList(self.AVAILABLE_KEY, [])
+
+        start = self._lines.index(self.INSTALLED_KEY) + 1
+        if self.AVAILABLE_KEY in self._lines:
+            end = self._lines.index(self.AVAILABLE_KEY)
+        else:
+            end = len(self._lines)
+
+        plugins = _clean(self._lines[start:end])
+        return PluginsList(self.INSTALLED_KEY, plugins)
+
+    @property
+    def available_plugins(self) -> PluginsList:
+        if self.AVAILABLE_KEY not in self._lines:
+            return PluginsList(self.AVAILABLE_KEY, [])
+
+        start = self._lines.index(self.AVAILABLE_KEY) + 1
+        plugins = _clean(self._lines[start:])
+        return PluginsList(self.AVAILABLE_KEY, plugins)
+
+    def _get_next_index(self, start_options: Tuple[str, ...], default: int = 0) -> int:
+        return _get_next_index(self._lines, start_options=start_options, default=default)
+
+
+def _get_next_index(lines: List[str], start_options: Tuple[str, ...], default: int = 0) -> int:
+    for index, line in enumerate(lines):
+        if line in start_options:
+            return index
+
+    return default
+
+
+def _clean(lines):
+    return [x for x in [x.strip() for x in lines if x]]
+
+
+@pytest.fixture(scope="module")
+def installed_plugin(ape_plugins_runner):
+    plugin_installed = TEST_PLUGIN_NAME in ape_plugins_runner.invoke_list().installed_plugins
+    did_install = False
+    if not plugin_installed:
+        install_result = ape_plugins_runner.invoke(["install", TEST_PLUGIN_NAME])
+        list_result = ape_plugins_runner.invoke_list()
+        plugins_list_output = list_result.installed_plugins
+        did_install = TEST_PLUGIN_NAME in plugins_list_output
+        msg = f"Failed to install plugin necessary for tests: {install_result.output}"
+        assert did_install, msg
+
+    yield
+
+    if did_install:
+        ape_plugins_runner.invoke(["uninstall", TEST_PLUGIN_NAME])
+
+
+@github_xfail()
+def test_list_excludes_core_plugins(ape_plugins_runner):
+    result = ape_plugins_runner.invoke_list()
+    message = "{} should not be in installed plugins".format
+    assert not result.core_plugins
+    assert not result.available_plugins
+    assert "console" not in result.installed_plugins, message("console")
+    assert "networks" not in result.installed_plugins, message("networks")
+    assert "geth" not in result.installed_plugins, message("geth")
+
+
+@github_xfail()
+def test_list_include_version(ape_plugins_runner, installed_plugin):
+    result = ape_plugins_runner.invoke_list()
+    assert result.installed_plugins.contains_version, "version is not in output"
+
+
+@github_xfail()
+def test_list_does_not_repeat(ape_plugins_runner, installed_plugin):
+    result = ape_plugins_runner.invoke_list(["--all"])
+    assert "ethereum" in result.core_plugins
+    assert "ethereum" not in result.installed_plugins
+    assert "ethereum" not in result.available_plugins
+
+
+@github_xfail()
+def test_upgrade(ape_plugins_runner, installed_plugin):
+    result = ape_plugins_runner.invoke(["install", TEST_PLUGIN_NAME, "--upgrade"])
+    assert result.exit_code == 0
+
+
+@github_xfail()
+def test_upgrade_failure(ape_plugins_runner):
+    result = ape_plugins_runner.invoke(["install", "NOT_EXISTS", "--upgrade"])
+    assert result.exit_code == 1
+
+
+@github_xfail()
+def test_install_from_config_file(ape_cli, runner, temp_config, caplog):
+    plugins_config = {"plugins": [{"name": TEST_PLUGIN_NAME}]}
+    with temp_config(plugins_config):
+        result = runner.invoke(ape_cli, ["plugins", "install", "."], catch_exceptions=False)
+        assert result.exit_code == 0, result.output
+
+    assert TEST_PLUGIN_NAME in caplog.records[-1].message
+
+
+@github_xfail()
+def test_uninstall(ape_cli, runner, installed_plugin, caplog):
+    result = runner.invoke(
+        ape_cli, ["plugins", "uninstall", TEST_PLUGIN_NAME, "--yes"], catch_exceptions=False
+    )
+    assert result.exit_code == 0, result.output
+    assert TEST_PLUGIN_NAME in result.output
+
+
+######## ./docs\test_pm.py
+
+from pathlib import Path
+
+from tests.integration.cli.utils import github_xfail, run_once, skip_projects_except
+
+EXPECTED_FAIL_MESSAGE = "Unknown package '{}'."
+
+
+@run_once
+def test_install_path_not_exists(ape_cli, runner):
+    path = "path/to/nowhere"
+    result = runner.invoke(ape_cli, ["pm", "install", path])
+    assert result.exit_code != 0
+    assert EXPECTED_FAIL_MESSAGE.format(path) in result.output
+
+
+@run_once
+def test_install_path_to_local_package(ape_cli, runner):
+    project = "with-contracts"
+    path = Path(__file__).parent / "projects" / project
+    result = runner.invoke(ape_cli, ["pm", "install", path.as_posix(), "--name", project])
+    assert result.exit_code == 0, result.output
+    assert f"Package '{path.as_posix()}' installed."
+
+
+@run_once
+def test_install_path_to_local_config_file(ape_cli, runner):
+    project = "with-contracts"
+    path = Path(__file__).parent / "projects" / project / "ape-config.yaml"
+    result = runner.invoke(ape_cli, ["pm", "install", path.as_posix(), "--name", project])
+    assert result.exit_code == 0
+    assert f"Package '{path.parent.as_posix()}' installed."
+
+
+@skip_projects_except("test", "with-contracts")
+def test_install_local_project_dependencies(ape_cli, runner):
+    result = runner.invoke(ape_cli, ["pm", "install"])
+    assert result.exit_code == 0
+    assert "All project packages installed." in result.output
+
+
+@run_once
+def test_install_force(ape_cli, runner):
+    result = runner.invoke(ape_cli, ["pm", "install", "--force"])
+    assert result.exit_code == 0
+    assert "All project packages installed." in result.output
+
+
+@github_xfail()
+def test_install_github_dependency_with_version(ape_cli, runner):
+    result = runner.invoke(
+        ape_cli,
+        [
+            "pm",
+            "install",
+            "gh:OpenZeppelin/openzeppelin-contracts",
+            "--name",
+            "OpenZeppelin",
+            "--version",
+            "4.6.0",
+        ],
+    )
+    assert result.exit_code == 0, result.output
+    assert "Package 'OpenZeppelin@4.6.0' installed."
+
+
+@github_xfail()
+def test_install_github_dependency_with_ref(ape_cli, runner):
+    result = runner.invoke(
+        ape_cli,
+        [
+            "pm",
+            "install",
+            "gh:OpenZeppelin/openzeppelin-contracts",
+            "--name",
+            "OpenZeppelin",
+            "--ref",
+            "master",
+        ],
+    )
+    assert result.exit_code == 0, result.output
+    assert "Package 'OpenZeppelin@master' installed."
+
+
+@run_once
+def test_compile_package_not_exists(ape_cli, runner):
+    name = "NOT_EXISTS"
+    result = runner.invoke(ape_cli, ["pm", "compile", name])
+    expected = f"Dependency '{name}' unknown. Is it installed?"
+    assert result.exit_code != 0
+    assert expected in result.output
+
+
+@skip_projects_except("with-contracts")
+def test_compile(ape_cli, runner, project):
+    result = runner.invoke(ape_cli, ["pm", "compile"])
+    assert result.exit_code == 0, result.output
+    assert "Package '__FooDep__' compiled." in result.output
+
+
+@skip_projects_except("with-contracts")
+def test_compile_dependency(ape_cli, runner, project):
+    name = "__FooDep__"
+    result = runner.invoke(ape_cli, ["pm", "compile", name])
+    assert result.exit_code == 0, result.output
+    assert f"Package '{name}' compiled." in result.output
+
+
+######## ./docs\test_run.py
+
+import sys
+
+from .utils import skip_projects_except
+
+BAD_COMMAND = "not-a-name"
+
+
+@skip_projects_except("script")
+def test_run_unknown_script(ape_cli, runner, project):
+    result = runner.invoke(ape_cli, ["run", BAD_COMMAND])
+    assert result.exit_code == 2
+    assert f"No such command '{BAD_COMMAND}'." in result.output
+
+
+@skip_projects_except("script")
+def test_run(ape_cli, runner, project):
+    result = runner.invoke(ape_cli, ["run"])
+    assert result.exit_code == 0, result.output
+    # By default, no commands are run
+    assert "Super secret script output" not in result.output
+
+    scripts = [s for s in project.scripts_folder.glob("*.py") if not s.name.startswith("error")]
+    for script_file in scripts:
+        result = runner.invoke(ape_cli, ["run", script_file.stem])
+        assert (
+            result.exit_code == 0
+        ), f"Unexpected exit code for '{script_file.name}'\n{result.output}"
+
+        if script_file.stem.startswith("_"):
+            assert "Super secret script output" not in result.output
+
+        else:
+            assert "Super secret script output" in result.output
+
+
+@skip_projects_except("script")
+def test_run_with_verbosity(ape_cli, runner, project):
+    result = runner.invoke(ape_cli, ["run", "click", "--verbosity", "DEBUG"])
+    assert result.exit_code == 0, result.output
+
+
+@skip_projects_except("script")
+def test_run_subdirectories(ape_cli, runner, project):
+    result = runner.invoke(ape_cli, ["run"])
+    assert result.exit_code == 0, result.output
+    # By default, no commands are run
+    assert "Super secret script output" not in result.output
+    subdirectory_scripts = [
+        s
+        for s in (project.scripts_folder / "subdirectory").rglob("*.py")
+        if not s.name.startswith("error")
+    ]
+    for each in subdirectory_scripts:
+        result = runner.invoke(ape_cli, ["run", "subdirectory", each.stem])
+        assert result.exit_code == 0
+        assert "Super secret script output" in result.output
+
+
+@skip_projects_except("only-script-subdirs")
+def test_run_only_subdirs(ape_cli, runner, project):
+    result = runner.invoke(ape_cli, ["run"])
+    assert result.exit_code == 0, result.output
+    # By default, no commands are run
+    assert "Super secret script output" not in result.output
+    subdirectory_scripts = [
+        s
+        for s in (project.scripts_folder / "subdirectory").rglob("*.py")
+        if not s.name.startswith("error")
+    ]
+    for each in subdirectory_scripts:
+        result = runner.invoke(ape_cli, ["run", "subdirectory", each.stem])
+        assert result.exit_code == 0, f"Unexpected exit code for '{each.name}'"
+        assert "Super secret script output" in result.output
+
+
+@skip_projects_except("script")
+def test_run_when_script_errors(ape_cli, runner, project):
+    scripts = [
+        s
+        for s in project.scripts_folder.glob("*.py")
+        if s.name.startswith("error") and not s.name.endswith("forgot_click.py")
+    ]
+    for script_file in scripts:
+        result = runner.invoke(ape_cli, ["run", script_file.stem])
+        assert (
+            result.exit_code != 0
+        ), f"Unexpected exit code for '{script_file.name}'.\n{result.output}"
+        assert str(result.exception) == "Expected exception"
+
+
+@skip_projects_except("script")
+def test_run_interactive(ape_cli, runner, project):
+    scripts = [
+        project.scripts_folder / f"{s}.py" for s in ("error_main", "error_cli", "error_no_def")
+    ]
+
+    # Show that the variable namespace from the script is available in the console.
+    user_input = "local_variable\nexit\n"
+
+    result = runner.invoke(ape_cli, ["run", "--interactive", scripts[0].stem], input=user_input)
+    assert result.exit_code == 0, result.output
+
+    # From script: local_variable = "test foo bar"
+    assert "test foo bar" in result.output
+
+
+@skip_projects_except("script")
+def test_run_adhoc_provider(ape_cli, runner, project):
+    result = runner.invoke(
+        ape_cli, ["run", "deploy", "--network", "ethereum:mainnet:http://127.0.0.1:9545"]
+    )
+
+    # Show that it attempts to connect
+    assert result.exit_code == 1, result.output
+    assert "No node found on 'http://127.0.0.1:9545" in result.output
+
+
+@skip_projects_except("script")
+def test_run_adhoc_network(ape_cli, runner, project):
+    result = runner.invoke(ape_cli, ["run", "deploy", "--network", "http://127.0.0.1:9545"])
+
+    # Show that it attempts to connect
+    assert result.exit_code == 1, result.output
+    assert "No node found on 'http://127.0.0.1:9545" in result.output
+
+
+@skip_projects_except("script")
+def test_try_run_script_missing_cli_decorator(ape_cli, runner, project):
+    """
+    Shows that we cannot run a script defining a `cli()` method without
+    it being a click command. The script is not recognized, so you get
+    a usage error.
+    """
+
+    result = runner.invoke(ape_cli, ["run", "error_forgot_click"])
+    assert "Usage: cli run" in result.output
+
+
+@skip_projects_except("with-contracts")
+def test_uncaught_tx_err(ape_cli, runner, project):
+    result = runner.invoke(ape_cli, ["run", "txerr"])
+    assert '/scripts/txerr.py", line 12, in main' in result.output
+    assert "contract.setNumber(5, sender=account)" in result.output
+    assert "ERROR: (ContractLogicError) Transaction failed." in result.output
+
+
+@skip_projects_except("script")
+def test_scripts_module_already_installed(ape_cli, runner, project, mocker):
+    """
+    Make sure that if there is for some reason a python module names `scripts`
+    installed, it does not interfere with Ape's scripting mechanism.
+    """
+    mock_scripts = mocker.MagicMock()
+    mock_path = mocker.MagicMock()
+    mock_path._path = "path/to/scripts"
+    mock_scripts.__file__ = None
+    mock_scripts.__path__ = mock_path
+    sys.modules["scripts"] = mock_scripts
+
+    result = runner.invoke(ape_cli, ["run"])
+    assert result.exit_code == 0, result.output
+
+    del sys.modules["scripts"]
+
+
+######## ./docs\test_test.py
+
+import re
+from pathlib import Path
+from typing import Optional
+
+import pytest
+
+from ape.pytest.fixtures import PytestApeFixtures
+from tests.conftest import GETH_URI, geth_process_test
+from tests.integration.cli.utils import skip_projects_except
+
+BASE_PROJECTS_PATH = Path(__file__).parent / "projects"
+TOKEN_B_GAS_REPORT = r"""
+ +TokenB Gas
+
+  Method +Times called +Min. +Max. +Mean +Median
+ ─+
+  __init__ +\d +\d+ + \d+ + \d+ + \d+
+  balanceOf +\d +\d+ + \d+ + \d+ + \d+
+  transfer +\d +\d+ + \d+ + \d+ + \d+
+"""
+EXPECTED_GAS_REPORT = rf"""
+ +TestContractVy Gas
+
+  Method +Times called +Min. +Max. +Mean +Median
+ ─+
+  __init__ +\d +\d+ + \d+ + \d+ + \d+
+  fooAndBar +\d +\d+ + \d+ + \d+ + \d+
+  myNumber +\d +\d+ + \d+ + \d+ + \d+
+  setAddress +\d +\d+ + \d+ + \d+ + \d+
+  setNumber +\d +\d+ + \d+ + \d+ + \d+
+
+ +TokenA Gas
+
+  Method +Times called +Min. +Max. +Mean +Median
+ ─+
+  __init__ +\d +\d+ + \d+ + \d+ + \d+
+  balanceOf +\d +\d+ + \d+ + \d+ + \d+
+  transfer +\d +\d+ + \d+ + \d+ + \d+
+{TOKEN_B_GAS_REPORT}
+"""
+GETH_LOCAL_CONFIG = f"""
+geth:
+  ethereum:
+    local:
+      uri: {GETH_URI}
+"""
+
+
+def filter_expected_methods(*methods_to_remove: str) -> str:
+    expected = EXPECTED_GAS_REPORT
+    for name in methods_to_remove:
+        line = f"\n  {name} +\\d +\\d+ + \\d+ + \\d+ + \\d+"
+        expected = expected.replace(line, "")
+
+    return expected
+
+
+@pytest.fixture(autouse=True)
+def load_dependencies(project):
+    """Ensure these are loaded before setting up pytester."""
+    project.load_dependencies()
+
+
+@pytest.fixture
+def setup_pytester(pytester):
+    def setup(project_name: str):
+        project_path = BASE_PROJECTS_PATH / project_name
+        tests_path = project_path / "tests"
+
+        # Assume all tests should pass
+        num_passes = 0
+        num_failed = 0
+        test_files = {}
+        for file_path in tests_path.iterdir():
+            if file_path.name.startswith("test_") and file_path.suffix == ".py":
+                content = file_path.read_text()
+                test_files[file_path.name] = content
+                num_passes += len(
+                    [
+                        x
+                        for x in content.split("\n")
+                        if x.startswith("def test_") and not x.startswith("def test_fail_")
+                    ]
+                )
+                num_failed += len(
+                    [x for x in content.split("\n") if x.startswith("def test_fail_")]
+                )
+
+        pytester.makepyfile(**test_files)
+
+        # Make other files
+        def _make_all_files(base: Path, prefix: Optional[Path] = None):
+            for file in base.iterdir():
+                if file.is_dir() and not file.name == "tests":
+                    _make_all_files(file, prefix=Path(file.name))
+                elif file.is_file():
+                    name = (prefix / file.name).as_posix() if prefix else file.name
+                    src = {name: file.read_text().splitlines()}
+                    pytester.makefile(file.suffix, **src)
+
+        _make_all_files(project_path)
+
+        # Check for a conftest.py
+        conftest = tests_path / "conftest.py"
+        if conftest.is_file():
+            pytester.makeconftest(conftest.read_text())
+
+        # Returns expected number of passing tests.
+        return num_passes, num_failed
+
+    return setup
+
+
+def run_gas_test(
+    result, expected_passed: int, expected_failed: int, expected_report: str = EXPECTED_GAS_REPORT
+):
+    result.assert_outcomes(passed=expected_passed, failed=expected_failed), "\n".join(
+        result.outlines
+    )
+    gas_header_line_index = None
+    for index, line in enumerate(result.outlines):
+        if "Gas Profile" in line:
+            gas_header_line_index = index
+
+    assert gas_header_line_index is not None, "'Gas Profile' not in output."
+    expected = expected_report.split("\n")[1:]
+    start_index = gas_header_line_index + 1
+    end_index = start_index + len(expected)
+    actual = [x.rstrip() for x in result.outlines[start_index:end_index]]
+    assert "WARNING: No gas usage data found." not in actual, "Gas data missing!"
+
+    actual_len = len(actual)
+    expected_len = len(expected)
+
+    if actual_len > expected_len:
+        remainder = "\n".join(actual[expected_len:])
+        pytest.fail(f"Actual contains more than expected:\n{remainder}")
+    elif expected_len > actual_len:
+        remainder = "\n".join(expected[actual_len:])
+        pytest.fail(f"Expected contains more than actual:\n{remainder}")
+
+    for actual_line, expected_line in zip(actual, expected):
+        message = f"'{actual_line}' does not match pattern '{expected_line}'."
+        assert re.match(expected_line, actual_line), message
+
+
+@skip_projects_except("test", "with-contracts")
+def test_test(setup_pytester, project, pytester, eth_tester_provider):
+    _ = eth_tester_provider  # Ensure using EthTester for this test.
+    passed, failed = setup_pytester(project.path.name)
+    from ape.logging import logger
+
+    logger.set_level("DEBUG")
+    result = pytester.runpytest()
+    result.assert_outcomes(passed=passed, failed=failed), "\n".join(result.outlines)
+
+
+@skip_projects_except("with-contracts")
+def test_uncaught_txn_err(setup_pytester, project, pytester, eth_tester_provider):
+    _ = eth_tester_provider  # Ensure using EthTester for this test.
+    setup_pytester(project.path.name)
+    result = pytester.runpytest()
+    expected = """
+    contract_in_test.setNumber(5, sender=owner)
+E   ape.exceptions.ContractLogicError: Transaction failed.
+    """.strip()
+    assert expected in str(result.stdout)
+
+
+@skip_projects_except("with-contracts")
+def test_show_internal(setup_pytester, project, pytester, eth_tester_provider):
+    _ = eth_tester_provider  # Ensure using EthTester for this test.
+    setup_pytester(project.path.name)
+    result = pytester.runpytest("--showinternal")
+    expected = """
+    raise vm_err from err
+E   ape.exceptions.ContractLogicError: Transaction failed.
+    """.strip()
+    assert expected in str(result.stdout)
+
+
+@skip_projects_except("test", "with-contracts")
+def test_test_isolation_disabled(setup_pytester, project, pytester, eth_tester_provider):
+    # check the disable isolation option actually disables built-in isolation
+    _ = eth_tester_provider  # Ensure using EthTester for this test.
+    setup_pytester(project.path.name)
+    result = pytester.runpytest("--disable-isolation", "--setup-show")
+    assert "F _function_isolation" not in "\n".join(result.outlines)
+
+
+@skip_projects_except("test", "with-contracts")
+def test_fixture_docs(setup_pytester, project, pytester, eth_tester_provider):
+    _ = eth_tester_provider  # Ensure using EthTester for this test.
+    result = pytester.runpytest("-q", "--fixtures")
+    actual = "\n".join(result.outlines)
+
+    # 'accounts', 'networks', 'chain', and 'project' (etc.)
+    fixtures = [prop for n, prop in vars(PytestApeFixtures).items() if not n.startswith("_")]
+    for fixture in fixtures:
+        # The doc str of the fixture shows in the CLI output
+        for doc_str in fixture.__doc__.splitlines():
+            assert doc_str.strip() in actual
+
+
+@skip_projects_except("with-contracts")
+def test_gas_flag_when_not_supported(setup_pytester, project, pytester, eth_tester_provider):
+    _ = eth_tester_provider  # Ensure using EthTester for this test.
+    setup_pytester(project.path.name)
+    path = f"{project.path}/tests/test_contract.py::test_contract_interaction_in_tests"
+    result = pytester.runpytest(path, "--gas")
+    assert (
+        "Provider 'test' does not support transaction tracing. "
+        "The gas profile is limited to receipt-level data."
+    ) in "\n".join(result.outlines)
+
+
+@geth_process_test
+@skip_projects_except("geth")
+def test_gas_flag_in_tests(geth_provider, setup_pytester, project, pytester):
+    passed, failed = setup_pytester(project.path.name)
+    result = pytester.runpytest("--gas")
+    run_gas_test(result, passed, failed)
+
+
+@geth_process_test
+@skip_projects_except("geth")
+def test_gas_flag_set_in_config(geth_provider, setup_pytester, project, pytester, switch_config):
+    passed, failed = setup_pytester(project.path.name)
+    config_content = f"""
+    geth:
+      ethereum:
+        local:
+          uri: {GETH_URI}
+
+    test:
+      disconnect_providers_after: false
+      gas:
+        show: true
+    """
+
+    with switch_config(project, config_content):
+        result = pytester.runpytest()
+        run_gas_test(result, passed, failed)
+
+
+@geth_process_test
+@skip_projects_except("geth")
+def test_gas_flag_exclude_using_cli_option(geth_provider, setup_pytester, project, pytester):
+    passed, failed = setup_pytester(project.path.name)
+    # NOTE: Includes both a mutable and a view method.
+    expected = filter_expected_methods("fooAndBar", "myNumber")
+    # Also ensure can filter out whole class
+    expected = expected.replace(TOKEN_B_GAS_REPORT, "")
+    result = pytester.runpytest("--gas", "--gas-exclude", "*:fooAndBar,*:myNumber,tokenB:*")
+    run_gas_test(result, passed, failed, expected_report=expected)
+
+
+@geth_process_test
+@skip_projects_except("geth")
+def test_gas_flag_exclusions_set_in_config(
+    geth_provider, setup_pytester, project, pytester, switch_config
+):
+    passed, failed = setup_pytester(project.path.name)
+    # NOTE: Includes both a mutable and a view method.
+    expected = filter_expected_methods("fooAndBar", "myNumber")
+    # Also ensure can filter out whole class
+    expected = expected.replace(TOKEN_B_GAS_REPORT, "")
+    config_content = rf"""
+    geth:
+      ethereum:
+        local:
+          uri: {GETH_URI}
+
+    test:
+      disconnect_providers_after: false
+      gas:
+        exclude:
+          - method_name: fooAndBar
+          - method_name: myNumber
+          - contract_name: TokenB
+    """
+    with switch_config(project, config_content):
+        result = pytester.runpytest("--gas")
+        run_gas_test(result, passed, failed, expected_report=expected)
+
+
+@geth_process_test
+@skip_projects_except("geth")
+def test_gas_flag_excluding_contracts(geth_provider, setup_pytester, project, pytester):
+    passed, failed = setup_pytester(project.path.name)
+    result = pytester.runpytest("--gas", "--gas-exclude", "TestContractVy,TokenA")
+    run_gas_test(result, passed, failed, expected_report=TOKEN_B_GAS_REPORT)
+
+
+@geth_process_test
+@skip_projects_except("geth")
+def test_coverage(geth_provider, setup_pytester, project, pytester):
+    """
+    Ensures the --coverage flag works.
+    For better coverage tests, see ape-vyper because the Vyper
+    plugin is what implements the `trace_source()` method which does the bulk
+    of the coverage work.
+    """
+    passed, failed = setup_pytester(project.path.name)
+    result = pytester.runpytest("--coverage", "--showinternal")
+    result.assert_outcomes(passed=passed, failed=failed)
+
+
