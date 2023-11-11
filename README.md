@@ -41,3 +41,4 @@ concatenate_files(dir_name, 'knowledge_base.txt')
 
 - run locally: `python bot.py`
 - or deploy to cloud with https://fly.io: `flyctl deploy --ha=false` (atm the script only supports 1 machine, it's already configured like this)
+- add bot in a group and use `/add_group groupid` to whitelist it and it's ready to use
