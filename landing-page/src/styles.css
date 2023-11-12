@@ -1,0 +1,345 @@
+@import url("https://fonts.googleapis.com/css2?family=Sanchez&display=swap");
+
+* {
+  box-sizing: border-box;
+  font-family: "Sanchez", serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  color: white;
+  background-color: black;
+}
+
+h1 {
+  font-size: 6em;
+  text-shadow: #000 0px 0 10px;
+}
+h2 {
+  font-size: 3em;
+  text-shadow: #000 0px 0 10px;
+}
+h3 {
+  font-size: 2em;
+}
+
+ul,
+li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  font-family: sans-serif;
+  /* text-align: center; */
+  /* background-image: url("https://cdn.discordapp.com/attachments/1009590950894505994/1172653645611941938/worms_futuristic_cyborg_jungle_forest_e82a334f-2109-4db7-8c06-c1a2440b68f6.webp?ex=656119cf&is=654ea4cf&hm=ddc349d21e57c7e54ab5a5b2afe893dd9cbeea81a610fa73cd96d2e08cec012e&"); */
+  background-image: url("https://cdn.discordapp.com/attachments/1009590950894505994/1172655180374867989/worms_futuristic_cyborg_jungle_forest_023a3e08-0d85-453e-a05f-5178adddcf3f.webp?ex=65611b3d&is=654ea63d&hm=edcfd4ce8426a9528307116f31719c9b6098978e7ed58a573be2c598e61d4b00&");
+  /* background-image: url("https://cdn.discordapp.com/attachments/1009590950894505994/1172662527793045574/worms_futuristic_cyborg_jungle_forest_2cabf550-2d98-4b12-b9fc-49b1271e13e3.png?ex=65612215&is=654ead15&hm=3b1a7eb0c398682c8d640c863a297f2100e994aba2bd9e8a8ad395be64dd2065&"); */
+  background-repeat: no-repeat;
+  /* background-position-x: 70px; */
+  /* background-size: 100vw; */
+  background-size: cover;
+}
+
+#tsparticles {
+  opacity: 0.25;
+}
+
+#tsparticles canvas {
+  position: absolute !important;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.section {
+  height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 800px;
+}
+
+.navigator {
+  display: flex;
+  /* flex-direction: column; */
+  width: 80%;
+  justify-content: space-between;
+  text-shadow: #000 0px 0 10px;
+}
+
+.navigator > a {
+  font-size: 1.3em;
+  color: white;
+  padding: 20px;
+}
+
+.navigator > a:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.half-width {
+  width: 800px;
+}
+
+.logo {
+  filter: drop-shadow(0 0 0.75rem #000);
+}
+
+.navigator > a:visited {
+  color: white;
+}
+
+#section-1 {
+  padding: 80px;
+}
+
+#section-1 .half-width {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#section-2 {
+  padding-left: 80px;
+  padding-right: 80px;
+  display: flex;
+  align-items: center;
+  min-height: 900px;
+  padding-top: 50px;
+  padding-bottom: 150px;
+  height: unset;
+}
+
+#section-2 h2:nth-child(1) {
+  margin-bottom: 0;
+}
+#section-2 h2:nth-child(2) {
+  margin-top: 0;
+}
+
+#section-2 h3 {
+  /* text-shadow: #fff 0px 0 5px; */
+}
+
+ul {
+  font-size: 1.2em;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+li {
+  font-size: 1.1em;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* display: flex; */
+  /* flex-direction: column;
+  align-items: center; */
+  text-align: center;
+  margin: 30px;
+  padding: 30px;
+}
+
+li h3 {
+  margin-top: 0;
+}
+
+#section-3 {
+  padding-left: 80px;
+  padding-right: 80px;
+  min-height: 1100px;
+}
+
+#section-3 ul {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+#section-3 li {
+}
+
+#section-3 li p:nth-child(1) {
+  padding: 10px;
+}
+
+#section-3 h1 {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+#section-3 h3 {
+  font-size: 1.5em;
+}
+
+#section-3 p {
+  text-align: left;
+  background-color: rgba(255, 255, 255, 0.2);
+  font-family: monospace;
+  min-height: 100px;
+  text-align: center;
+  overflow-y: visible;
+}
+
+#section-4 {
+  padding-left: 80px;
+}
+
+#section-4 h3 {
+  font-size: 1.5em;
+}
+#section-1 a {
+  text-decoration: none;
+}
+a {
+  color: #fff;
+  font-weight: bold;
+}
+
+a:visited {
+  color: #fff;
+}
+
+pre {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+  overflow-y: scroll;
+  height: 300px;
+  font-family: monospace;
+  text-align: left;
+  /* width: 100%; */
+  height: 300px;
+  padding: 5px;
+}
+
+@media only screen and (max-width: 1150px) {
+  .half-width {
+    width: 100%;
+  }
+  .logo {
+    width: 128px;
+  }
+  h1 {
+    font-size: 3em;
+  }
+  h2 {
+    font-size: 1em;
+  }
+  #section-1 h2 {
+    margin-top: 10px;
+  }
+  #section-1 h1 {
+    margin-bottom: 0;
+  }
+  h3 {
+    font-size: 1em;
+  }
+  #section-1 {
+    padding: 0;
+    padding-top: 60px;
+  }
+  #section-2 {
+    padding-left: 40px;
+    padding-right: 40px;
+    height: unset;
+    padding-bottom: 50px;
+  }
+  #section-2 h2 {
+    font-size: 3em;
+    text-align: center;
+  }
+  #section-2 h3 {
+    font-size: 1.5em;
+  }
+  #section-2 ul {
+    width: 100%;
+    grid-template-columns: repeat(1, 1fr);
+  }
+  #section-2 li {
+    font-size: 0.9em;
+  }
+  #section-3 {
+    padding-left: 0px;
+    padding-right: 0px;
+    height: unset;
+  }
+
+  #section-3 h1 {
+    text-align: center;
+    font-size: 3.2em;
+  }
+  #section-3 h3 {
+    font-size: 1.5em;
+  }
+  #section-3 ul {
+    width: 100%;
+    grid-template-columns: repeat(1, 1fr);
+  }
+  #section-3 li {
+    max-width: 87vw;
+  }
+  #section-4 {
+    padding-left: 40px;
+    padding-right: 40px;
+    height: unset;
+    padding-bottom: 200px;
+  }
+  #section-4 input {
+    width: 100%;
+  }
+  #section-4 .submit-btn {
+    margin-top: 20px;
+    width: 100%;
+  }
+  .navigator {
+    margin-top: 50px;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: underline;
+  }
+  button.next-section {
+    display: none;
+  }
+}
+
+.next-section {
+  position: absolute;
+  bottom: 5vh;
+  right: 5vh;
+}
+
+button {
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 1);
+  border: none;
+  font-size: 1.5em;
+}
+
+button:hover {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+button.alt {
+  background-color: transparent;
+  border: solid 2px white;
+  color: white;
+}
+
+input {
+  width: 500px;
+  padding: 20px;
+  font-size: 1.3em;
+  background-color: transparent;
+  color: white;
+  border: solid 2px white;
+  margin-right: 30px;
+  text-shadow: #fff 0px 0 10px;
+}
+
+.submit {
+  margin-top: 40px;
+}
