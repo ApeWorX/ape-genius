@@ -70,27 +70,12 @@ li {
   text-shadow: #000 0px 0 10px;
 }
 
-.navigator > a {
-  font-size: 1.3em;
-  color: white;
-  padding: 20px;
-}
-
-.navigator > a:hover {
-  cursor: pointer;
-  text-decoration: underline;
-}
-
 .half-width {
   width: 800px;
 }
 
 .logo {
   filter: drop-shadow(0 0 0.75rem #000);
-}
-
-.navigator > a:visited {
-  color: white;
 }
 
 #section-1 {
@@ -188,16 +173,24 @@ li h3 {
 #section-4 h3 {
   font-size: 1.5em;
 }
-#section-1 a {
-  text-decoration: none;
-}
+
 a {
   color: #fff;
   font-weight: bold;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  font-size: 1.3em;
+  color: white;
+  padding: 20px;
 }
 
 a:visited {
   color: #fff;
+}
+
+a:hover {
+  text-decoration-thickness: 3px;
+  cursor: pointer;
 }
 
 pre {
@@ -342,4 +335,14 @@ input {
 
 .submit {
   margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+  /* align-items: flex-start; */
+  
+}
+
+.submit-btn {
+  text-align: left;
+  margin-bottom: 20px;
 }

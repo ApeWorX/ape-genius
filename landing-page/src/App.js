@@ -564,11 +564,11 @@ export default function App() {
             <h1>Ape Genius</h1>
             <h2>The smartest ape in the jungle</h2>
             <div className="navigator">
-              <a onClick={() => scrollTo("section-2")}>About</a>
+              <a onClick={() => scrollTo("")}>About</a>
               <a onClick={() => scrollTo("section-3")}>Examples</a>
-              <a onClick={() => scrollTo("section-4")}>Preview</a>
-              <a href="https://github.com/ApeWorX/ape-genius">Code</a>
-              <a href="https://apeworx.io/">ApeWorX</a>
+              <a onClick={() => scrollTo("section-4")}>Follow</a>
+              <a target="_blank" href="https://github.com/ApeWorX/ape-genius">Code</a>
+              <a target="_blank" href="https://apeworx.io/">ApeWorX</a>
             </div>
 
             <button
@@ -816,24 +816,26 @@ Note: This answer is creative and goes beyond the source files provided, as it i
             className="next-section"
             onClick={() => scrollTo("section-4")}
           >
-            Apply for Preview
+            Follow Updates
           </button>
         </div>
         <div className="section" id="section-4">
-          <h1>Apply for Preview Access</h1>
+          <h1>Follow Our Updates</h1>
           <h3>
-            Today the tool is only available
+            Today we host and serve Ape Genius
             <br />
-            for ApeWorX partners
+            only for ApeWorX partners
           </h3>
           <h3>
-            Apply your email below to receive
+            Follow our Telegram announcements group
             <br />
-            preview access when available:
+            and get preview access when available
           </h3>
           <div className="submit">
-            <input />
-            <button className="submit-btn">SUBMIT EMAIL</button>
+            {/* <input /> */}
+            <a target="_blank" href="https://t.me/apegenius" className="submit-btn">📣 Follow Ape Genius Announcements</a>
+            <a target="_blank" href="https://twitter.com/ApeFramework" className="submit-btn">🐦 Follow Ape on Twitter</a>
+            <a target="_blank" href="https://github.com/ApeWorX/apegenius" className="submit-btn">🍴 Fork Ape Genius Source Code</a>
           </div>
           {/* <ul>
             <li>
