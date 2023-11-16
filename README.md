@@ -15,6 +15,8 @@ The smartest ape in the jungle
 - `OPENAI_API_KEY`: https://platform.openai.com/api-keys
 - `TELEGRAM_TOKEN`: https://t.me/BotFather
 
+> You can test requests using [`request.py`](./request.py) without a telegram token
+
 ### 3. Override [instructions](https://github.com/ApeWorX/ape-genius/blob/main/bot.py#L108) and [owner id](https://github.com/ApeWorX/ape-genius/blob/main/bot.py#L63) to fit your usage.
 
 - You can find your owner id with https://t.me/username_to_id_bot
