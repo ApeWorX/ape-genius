@@ -26,3 +26,8 @@ The smartest ape in the jungle
 - run locally with docker, or: `pip install -r "requirements.txt"` then `python bot.py`
 - or deploy to cloud with https://fly.io: `flyctl deploy --ha=false` (atm the script only supports 1 machine, check the example [`fly.toml`](./fly.toml))
 - add bot in a group and use `/add_group groupid` to whitelist it and the bot is ready to answer questions with `/prompt` whenever you want
+
+### 5. Configure the bot
+
+- `/add_admin your_id` to add yourself as an admin
+- `/add_group group_id` to add a new group with rate limiting of 10 messages/day
