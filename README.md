@@ -25,4 +25,4 @@ The smartest ape in the jungle
 
 - run locally with docker, or: `pip install -r "requirements.txt"` then `python bot.py`
 - or deploy to cloud with https://fly.io: `flyctl deploy --ha=false` (atm the script only supports 1 machine, it's already configured like this)
-- add bot in a group and use `/add_group groupid` to whitelist it and it's ready to use with `/prompt whatever you want`
+- add bot in a group and use `/add_group groupid` to whitelist it and the bot is ready to answer questions with `/prompt` whenever you want
