@@ -4,7 +4,7 @@ The smartest ape in the jungle
 
 ## Runnig your own bot
 
-### 1. Replace [`knowledge_base.txt`](./knowledge_base.txt) with your own knowledgebase
+### 1. Replace [`knowledge-base.txt`](./knowledge-base.txt) with your own knowledgebase
 
 Here is a handy python function that can help you take an entire repo and concatenate all files in a single .txt with all files contents and paths:
 
@@ -27,7 +27,7 @@ def concatenate_files(dir_name, output_filename):
                     print(f"Skipping non-text file or error reading file: {file_path} - {e}")
 
 # Example Call
-concatenate_files('./folder_name', 'knowledge_base.txt')
+concatenate_files('./folder_name', 'knowledge-base.txt')
 ```
 
 ### 2. Set `OPENAI_API_KEY` and `TELEGRAM_TOKEN` environment variables.
