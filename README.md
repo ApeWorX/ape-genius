@@ -31,5 +31,3 @@ The smartest ape in the jungle
 
 - `/add_admin your_id` to add yourself as an admin
 - `/add_group group_id` to add a new group with rate limiting of 10 messages/day
-
-To find out id's use a bot called @username_to_id_bot, add it in a group it will tell you the of the group and yours as well.
