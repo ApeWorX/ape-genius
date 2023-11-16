@@ -8,7 +8,7 @@ The smartest ape in the jungle
 
 - Delete the existing .ext
 - Add your stuff in [`knowledge-base`](./knowledge-base)
-- Run `concat.py` to compile the aboe folder into [`knowledge-base.txt`](./knowledge-base.txt) 
+- Run `python concat.py` to compile the aboe folder into [`knowledge-base.txt`](./knowledge-base.txt) 
 
 ### 2. Set `OPENAI_API_KEY` and `TELEGRAM_TOKEN` environment variables.
 
