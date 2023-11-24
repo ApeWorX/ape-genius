@@ -1,4 +1,4 @@
-# ape-genius
+# ApeGenius
 
 The smartest ape in the jungle
 
