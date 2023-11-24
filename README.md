@@ -2,13 +2,13 @@
 
 The smartest ape in the jungle
 
-## Runnig your own bot
+## Running your own bot
 
 ### 1. Replace [`knowledge-base.txt`](./knowledge-base.txt) with your own knowledge-base
 
 - Delete the existing .ext
 - Add your stuff in [`knowledge-base`](./knowledge-base)
-- Run `python concat.py` to compile the aboe folder into [`knowledge-base.txt`](./knowledge-base.txt) 
+- Run `python concat.py` to compile the above folder into [`knowledge-base.txt`](./knowledge-base.txt) 
 
 ### 2. Set `OPENAI_API_KEY` and `TELEGRAM_TOKEN` environment variables.
 
@@ -19,7 +19,7 @@ The smartest ape in the jungle
 
 ### 3. Override [instructions](https://github.com/ApeWorX/ape-genius/blob/main/bot.py#L108) and [owner id](https://github.com/ApeWorX/ape-genius/blob/main/bot.py#L63) to fit your usage.
 
-- You can find your owner id with https://t.me/username_to_id_bot
+- You can find your owner id at https://t.me/username_to_id_bot
 
 ### 4. Run or deploy to cloud
 
