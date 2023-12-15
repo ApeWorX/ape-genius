@@ -12,9 +12,9 @@ response = openai.chat.completions.create(
     temperature=0,
     messages=[
         {
-            "role": "system",
+            "role": "user",
             # example for ygenius
-            "content": "You are a bot helping people understand Yearn Finance (aka Yearn). I have prefixed documents that help you understand what is Yearn, answer the user question using the source files and tell the source of your answer. The answer must exist within the source files, otherwise don't answer. You can use ```language to write code that shows in a pretty way. If the task is of creative nature it's ok to go wild and beyons just the sources, but MUST state that the answer is creative if this happens. Do not invent anything about ape that is not in source files unless you said you were going creative. False certanty about what ape can do is the worse thing you can do, avoid it at all costs."
+            "content": "default instructions here"
         },
         {
             "role": "user",
@@ -23,7 +23,7 @@ response = openai.chat.completions.create(
         {
             "role": "user",
             # add your question here
-            "content": "What can you do to help me explore Yearn?"
+            "content": "question here"
         }
     ],
 )
