@@ -1,33 +1,47 @@
 import os
-import openai
+import anthropic
 
-openai.api_key = os.getenv('OPENAI_API_KEY')
+CLAUDE_KEY = os.getenv('CLAUDE_KEY')
+
+client = anthropic.Anthropic(
+    # defaults to os.environ.get("ANTHROPIC_API_KEY")
+    api_key=CLAUDE_KEY
+)
 
 knowledge_base = ''
 with open('knowledge-base.txt', 'r', encoding="utf-8") as file:
     knowledge_base = file.read()
 
-response = openai.chat.completions.create(
-    model="gpt-4-1106-preview",
+response = client.messages.create(
+    model="claude-3-opus-20240229",
+    max_tokens = 4000,
     temperature=0,
     messages=[
         {
             "role": "user",
             # example for ygenius
-            "content": "default instructions here"
+            "content": "Answer the question using the knowledge base"
+        },
+        {
+            "role": "assistant",
+            "content": ":"
         },
         {
             "role": "user",
             "content": knowledge_base
         },
         {
+            "role": "assistant",
+            "content": ":"
+        },
+        {
             "role": "user",
             # add your question here
-            "content": "question here"
+            "content": "what is apeworx"
         }
     ],
 )
 
-bot_response = response.choices[0].message.content
+bot_response = response.content[0].text
 
 print(bot_response)
