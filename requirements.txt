@@ -1,4 +1,4 @@
-openai==1.1.1
+anthropic
 python-telegram-bot==13.7
 PyYAML==6.0.1
 requests
