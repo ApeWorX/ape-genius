@@ -1,10 +1,13 @@
 import os
 import anthropic
 
+CLAUDE_KEY = os.getenv('CLAUDE_KEY')
+
 client = anthropic.Anthropic(
     # defaults to os.environ.get("ANTHROPIC_API_KEY")
-    api_key="my_api_key",
+    api_key=CLAUDE_KEY
 )
+
 knowledge_base = ''
 with open('knowledge-base.txt', 'r', encoding="utf-8") as file:
     knowledge_base = file.read()
