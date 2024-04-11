@@ -9,6 +9,6 @@ primary_region = "bos"
 [build]
 
 [http_service]
-  internal_port = 0.0.0.0:0
+  internal_port = 0.0.0.0:8080
   min_machines_running = 1
   processes = ["app"]
