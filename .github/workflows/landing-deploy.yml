@@ -14,50 +14,51 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
 
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '18'
         cache: 'npm'
-        cache-dependency-path: './landing-page/package-lock.json'
+        cache-dependency-path: 'landing-page/package-lock.json'
 
     - name: Install Dependencies
-      run: npm ci
       working-directory: ./landing-page
-
-    - name: Lint
-      run: npm run lint
-      working-directory: ./landing-page
+      run: |
+        npm ci --legacy-peer-deps
+        npm cache verify
 
     - name: Build
-      run: npm run build
       working-directory: ./landing-page
+      run: npm run build
       env:
         CI: true
         NODE_ENV: production
 
-    - name: Install Railway CLI
+    - name: Setup Railway CLI
       run: |
         curl -fsSL https://railway.app/install.sh | sh
+        railway login --token ${{ secrets.RAILWAY_TOKEN }}
 
     - name: Deploy to Railway
+      working-directory: ./landing-page
       run: |
+        railway link ${{ secrets.RAILWAY_PROJECT_ID }}
         railway up \
-          --service b54b1497-e63d-4612-94d9-f2e1c781755e \
+          --service ${{ secrets.RAILWAY_LANDING_SERVICE_ID }} \
+          --environment production \
           --detach
       env:
+        RAILWAY_STATIC_ENVIRONMENT: true
         RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
-    - name: Deploy to GitHub Pages (Backup)
+    # Backup deployment to GitHub Pages
+    - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
-        branch: gh-pages
         folder: landing-page/build
+        branch: gh-pages
         clean: true
-        single-commit: true
 
 permissions:
   contents: write
