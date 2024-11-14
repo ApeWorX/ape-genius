@@ -1,45 +1,141 @@
-# ape-gpt
+# ApeGenius
 
-The `ape-gpt` CLI tool facilitates interactions between GPT (Generative Pre-trained Transformer) models and GitHub repositories. It streamlines the process of cloning repositories, managing your OpenAI API key, and sending prompts to GPT using the contents of the cloned repositories.
+A CLI tool that facilitates interactions between AI language models (GPT and Claude) and GitHub repositories, designed specifically for analyzing and understanding Ape Framework codebases. It streamlines the process of cloning repositories, managing API keys, and sending prompts using the contents of cloned repositories.
+
+## Features
+
+- Support for both GPT-4 and Claude
+- Secure API key management
+- GitHub repository cloning
+- Source code analysis optimized for Ape Framework
+- Response logging and tracking
+- Command-line interface
 
 ## Installation
 
-To get started with `ape-gpt`, follow these steps:
+1. Clone the repository:
+```bash
+git clone https://github.com/ApeWorX/apegenius.git
+cd apegenius
+```
 
-1. Clone the `ape-gpt` repository to your local machine.
-2. Install the required Python dependencies by executing `pip install -r requirements.txt` in your terminal.
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
 ## Usage
 
-### Configuring the OpenAI API Key
+### GPT Commands
 
-Set up your OpenAI API key with `ape-gpt` by running:
-
-```
+Configure OpenAI API key:
+```bash
 python gpt.py config
 ```
 
-You will be prompted to enter your OpenAI API key, which will be stored securely for future use.
-
-### Cloning a GitHub Repository
-
-Clone a GitHub repository into the local `sources` directory with the following command:
-
-```
-python gpt.py clone <repository-url>
+Clone a repository:
+```bash
+python gpt.py clone 
 ```
 
-### Sending a Prompt to GPT
-
-Send a custom prompt to GPT using the content from one or more specified source directories:
-
-```
-python gpt.py prompt --src "source_directory1" --src "source_directory2" "Your prompt text"
+Send a prompt:
+```bash
+python gpt.py prompt --src "source_directory" "Your prompt text"
 ```
 
-The GPT response will be displayed in the terminal and also saved within the `responses` directory for your reference.
+### Claude Commands
 
-## Organization
+Configure Claude API key:
+```bash
+python claude.py config
+```
 
-- Cloned repositories are stored in the `sources` directory.
-- GPT responses are saved in the `responses` directory.
+Clone a repository:
+```bash
+python claude.py clone 
+```
+
+Send a prompt:
+```bash
+python claude.py prompt --src "source_directory" "Your prompt text"
+```
+
+### Multiple Source Directories
+
+Both tools support analyzing multiple source directories in a single prompt:
+```bash
+python gpt.py prompt --src "dir1" --src "dir2" "Your prompt"
+python claude.py prompt --src "dir1" --src "dir2" "Your prompt"
+```
+
+## Project Structure
+
+```
+apegenius/
+├── gpt.py           # GPT interface
+├── claude.py        # Claude interface
+├── requirements.txt # Project dependencies
+├── sources/         # Cloned repositories
+└── responses/       # AI responses
+```
+
+## Response Storage
+
+All responses are automatically saved in the `responses` directory with the following information:
+- Source directories used
+- Original prompt
+- AI response
+- Timestamp
+
+## Configuration
+
+- API keys are stored securely using base64 encoding
+- GPT config: `gpt_config.yml`
+- Claude config: `claude_config.yml`
+
+## Example Usage
+
+1. Set up API keys:
+```bash
+python gpt.py config    # For GPT
+python claude.py config # For Claude
+```
+
+2. Clone the Ape repository:
+```bash
+python gpt.py clone https://github.com/ApeWorX/ape.git
+```
+
+3. Analyze the code:
+```bash
+python claude.py prompt --src "ape" "Explain the main functionality of this Ape codebase"
+```
+
+## Requirements
+
+- Python 3.8+
+- Git
+- OpenAI API key (for GPT)
+- Anthropic API key (for Claude)
+- Required Python packages (see requirements.txt)
+
+## Error Handling
+
+Both tools include robust error handling for:
+- Invalid API keys
+- Repository cloning issues
+- File reading errors
+- API rate limits
+- Network connectivity issues
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request to the [ApeGenius repository](https://github.com/ApeWorX/apegenius).
+
+## License
+
+[Apache License 2.0](LICENSE)
+
+## Support
+
+For issues and feature requests, please open an issue on the [ApeGenius GitHub repository](https://github.com/ApeWorX/apegenius/issues).

@@ -1,4 +1,6 @@
-anthropic
+anthropic>=0.18.0
 python-telegram-bot==13.7
 PyYAML==6.0.1
-requests
+requests==2.31.0
+python-dotenv==1.0.1
+gunicorn==21.2.0
