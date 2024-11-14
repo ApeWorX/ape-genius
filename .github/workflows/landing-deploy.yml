@@ -4,29 +4,60 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/checkout@v3
       with:
-        node-version: '14' 
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: './landing-page/package-lock.json'
 
     - name: Install Dependencies
-      run: npm install
+      run: npm ci
+      working-directory: ./landing-page
+
+    - name: Lint
+      run: npm run lint
       working-directory: ./landing-page
 
     - name: Build
       run: npm run build
       working-directory: ./landing-page
+      env:
+        CI: true
+        NODE_ENV: production
 
-    - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@4.1.4
+    - name: Install Railway CLI
+      run: |
+        curl -fsSL https://railway.app/install.sh | sh
+
+    - name: Deploy to Railway
+      run: |
+        railway up \
+          --service ${{ secrets.RAILWAY_LANDING_SERVICE }} \
+          --detach
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+    - name: Deploy to GitHub Pages (Backup)
+      uses: JamesIves/github-pages-deploy-action@v4
       with:
         branch: gh-pages
         folder: landing-page/build
+        clean: true
+        single-commit: true
+
+permissions:
+  contents: write
