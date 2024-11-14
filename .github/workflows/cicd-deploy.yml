@@ -36,13 +36,5 @@ jobs:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CLAUDE_KEY: ${{ secrets.CLAUDE_KEY }}
 
-      - name: Deploy to Railway
-        run: |
-          railway redeploy -y --service b54b1497-e63d-4612-94d9-f2e1c781755e 
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          CLAUDE_KEY: ${{ secrets.CLAUDE_KEY }}
-
 permissions:
   contents: read
