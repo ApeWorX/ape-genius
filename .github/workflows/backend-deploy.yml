@@ -38,7 +38,7 @@ jobs:
 
       - name: Deploy to Railway
         run: |
-          railway up --service ${{ secrets.RAILWAY_SERVICE_NAME }}
+          railway up --service b54b1497-e63d-4612-94d9-f2e1c781755e
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
