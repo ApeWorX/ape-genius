@@ -31,7 +31,7 @@ jobs:
 
       - name: Run tests
         run: |
-          python tests/test_manual.py --check
+          pytest tests/test_manual.py
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CLAUDE_KEY: ${{ secrets.CLAUDE_KEY }}
