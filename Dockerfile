@@ -1,17 +1,26 @@
-# Use the specific version of Python
-FROM python:3.10.6
+FROM python:3.10-slim
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy the Python requirements file into the container at /app
-COPY requirements.txt /app/
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y git && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install any needed packages specified in requirements.txt
+# Copy requirements first for better caching
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application's code into the container at /app
-COPY . /app/
+# Copy the application
+COPY . .
 
-# Run bot.py when the container launches
-CMD ["python", "bot.py"]
+# Create necessary directories
+RUN mkdir -p sources responses
+
+# Set environment variables
+ENV ENVIRONMENT=production
+ENV DEBUG=False
+
+# Run the bot
+CMD ["python", "telegram_bot.py"]
