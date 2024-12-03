@@ -23,4 +23,4 @@ ENV ENVIRONMENT=production
 ENV DEBUG=False
 
 # Run the bot
-CMD ["python", "telegram_bot.py"]
+CMD ["python", "bot.py"]

@@ -1,10 +1,9 @@
 import pytest
 from telegram import Bot
-from telegram.error import TelegramError, Conflict, TimedOut
+from telegram.error import TelegramError, Conflict
 import os
 from dotenv import load_dotenv
 import logging
-import time
 
 # Configure logging
 logging.basicConfig(
@@ -40,7 +39,6 @@ def test_webhook_status(telegram_bot):
             # Clean up webhook
             telegram_bot.delete_webhook(drop_pending_updates=True)
             logger.info("✅ Webhook deleted")
-            time.sleep(1)  # Wait for webhook deletion to take effect
         else:
             logger.info("✅ No webhook set")
         assert True  # Test passes if we can check webhook status
@@ -49,34 +47,16 @@ def test_webhook_status(telegram_bot):
 
 def test_polling_status(telegram_bot):
     """Test for polling conflicts"""
-    max_retries = 3
-    retry_delay = 2
-
-    for attempt in range(max_retries):
-        try:
-            # Try to get updates with longer timeout
-            updates = telegram_bot.get_updates(
-                timeout=3,
-                offset=-1,  # Get only the latest update
-                limit=1     # Limit to 1 update
-            )
-            logger.info("✅ No polling conflicts detected")
-            # Test passes if we can get updates
-            assert True
-            return
-        except TimedOut:
-            if attempt < max_retries - 1:
-                logger.warning(f"Timeout on attempt {attempt + 1}, retrying in {retry_delay} seconds...")
-                time.sleep(retry_delay)
-                continue
-            else:
-                logger.error("❌ All polling attempts timed out")
-                pytest.fail("All polling attempts timed out")
-        except Conflict as e:
-            logger.error(f"❌ Polling conflict detected: {e}")
-            pytest.fail(f"Polling conflict detected: {e}")
-        except TelegramError as e:
-            pytest.fail(f"Failed to check polling: {e}")
+    try:
+        # Try to get updates with minimal timeout
+        updates = telegram_bot.get_updates(timeout=1)
+        logger.info("✅ No polling conflicts detected")
+        assert updates is not None
+    except Conflict as e:
+        logger.error(f"❌ Polling conflict detected: {e}")
+        pytest.fail(f"Polling conflict detected: {e}")
+    except TelegramError as e:
+        pytest.fail(f"Failed to check polling: {e}")
 
 def test_environment():
     """Test environment setup"""

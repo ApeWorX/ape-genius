@@ -1,0 +1,10 @@
+__pycache__
+*.pyc
+.env
+.env.*
+.git
+.gitignore
+.pytest_cache
+responses/
+sources/
+README.md
