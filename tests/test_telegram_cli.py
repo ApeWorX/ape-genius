@@ -1,97 +1,65 @@
-import pytest
-from telegram import Update
-from telegram.ext import ContextTypes
+import os
 import logging
-import pytest_asyncio
-from unittest.mock import AsyncMock, patch
-import sys
-from pathlib import Path
+from telegram import Update
+from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
+from dotenv import load_dotenv
 
-# Add project root to Python path
-project_root = str(Path(__file__).parent.parent)
-sys.path.append(project_root)
+# Load environment variables
+load_dotenv()
 
-# Now we can import from bot
-from bot import start, handle_message, add_admin
+# Configuration
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
+GROUP_ID = -4718382612  # Replace with your actual group ID
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Setup logging for debugging
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    level=logging.DEBUG
+)
 
-@pytest.mark.asyncio
-class TestTelegramBot:
-    @pytest.fixture(autouse=True)
-    async def setup(self):
-        """Setup test fixtures"""
-        self.chat_id = 1978731049
-        self.update = AsyncMock(spec=Update)
-        self.update.effective_chat.id = self.chat_id
-        self.update.message = AsyncMock()
-        self.update.message.chat.id = self.chat_id
-        self.context = AsyncMock(spec=ContextTypes.DEFAULT_TYPE)
+async def echo_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Echo the message back with '- claude' suffix if it's in the target group"""
+    chat_id = update.effective_chat.id
+    message = update.message.text
+    
+    # Debugging: Log chat ID and received message
+    logging.debug(f"Chat ID: {chat_id}, Message: {message}")
+    
+    if chat_id != GROUP_ID:
+        logging.info("Message not from the target group. Ignoring.")
+        return
 
-    async def test_start_command(self):
-        """Test /start command"""
-        self.update.message.text = "/start"
-        await start(self.update, self.context)
-        
-        self.update.message.reply_text.assert_awaited_once_with(
-            'Hello! Ask me anything about ApeWorX!'
-        )
+    response = f"{message} - claude"
+    logging.debug(f"Sending response: {response}")
+    
+    try:
+        await update.message.reply_text(response)
+        logging.info("Response sent successfully!")
+    except Exception as e:
+        logging.error(f"Failed to send response: {e}")
 
-    async def test_prompt_command(self):
-        """Test /p command"""
-        self.update.message.text = "/p What is Ape?"
-        # Mock group check
-        with patch('bot.groups', {str(self.chat_id): {'messages_today': 0, 'last_reset': '2024-12-04'}}):
-            await handle_message(self.update, self.context)
-            
-        assert self.update.message.reply_text.awaited
+def main():
+    """Run the echo bot"""
+    if not TELEGRAM_TOKEN:
+        logging.critical("TELEGRAM_TOKEN is missing. Please check your .env file.")
+        return
 
-    async def test_group_chat(self):
-        """Test group chat functionality"""
-        # Setup group context
-        self.update.message.chat.type = 'group'
-        self.update.message.text = "/p Test message"
-        
-        # Mock group data
-        with patch('bot.groups', {str(self.chat_id): {'messages_today': 0, 'last_reset': '2024-12-04'}}):
-            await handle_message(self.update, self.context)
-            assert self.update.message.reply_text.awaited
+    logging.info("Starting the echo bot...")
+    logging.info(f"Target group ID: {GROUP_ID}")
+    
+    # Create application instance
+    app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
 
-    @pytest.mark.parametrize("command,expected_text", [
-        ("/start", "Hello! Ask me anything about ApeWorX!"),
-        ("/p What is Ape?", None),
-        ("/prompt Tell me about ApeWorX", None),
-    ])
-    async def test_commands(self, command, expected_text):
-        """Test various commands"""
-        self.update.message.text = command
-        
-        with patch('bot.groups', {str(self.chat_id): {'messages_today': 0, 'last_reset': '2024-12-04'}}):
-            if command.startswith("/start"):
-                await start(self.update, self.context)
-                self.update.message.reply_text.assert_awaited_once_with(expected_text)
-            else:
-                await handle_message(self.update, self.context)
-                assert self.update.message.reply_text.awaited
+    # Add handler for text messages
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo_message))
 
-    async def test_message_limit(self):
-        """Test message limit in groups"""
-        # Mock group with max messages
-        group_data = {str(self.chat_id): {'messages_today': 10, 'last_reset': '2024-12-04'}}
-        
-        with patch('bot.groups', group_data):
-            await handle_message(self.update, self.context)
-            self.update.message.reply_text.assert_awaited_with(
-                'GPT limit for this group has been reached (10 msgs a day).'
-            )
+    logging.info("Bot is running! Send messages to the group for testing.")
+    try:
+        app.run_polling(allowed_updates=["message"])
+    except KeyboardInterrupt:
+        logging.info("Bot stopped by user.")
+    except Exception as e:
+        logging.critical(f"Bot encountered an error: {e}")
 
-    async def test_admin_command(self):
-        """Test admin command"""
-        # Setup admin test
-        self.update.message.from_user.id = 67950696  # Default admin ID
-        self.context.args = ["12345"]
-        
-        await add_admin(self.update, self.context)
-        self.update.message.reply_text.assert_awaited_with('Admin added successfully.')
+if __name__ == '__main__':
+    main()

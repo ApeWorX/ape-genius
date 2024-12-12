@@ -1,102 +1,93 @@
-import unittest
 import os
-from unittest.mock import patch, MagicMock
-from anthropic import Anthropic
-import tempfile
-import yaml
-import base64
+import logging
+from pathlib import Path
+from dotenv import load_dotenv
+import anthropic
 
-class TestAnthropicPrompt(unittest.TestCase):
-    def setUp(self):
-        """Set up test environment"""
-        self.temp_dir = tempfile.mkdtemp()
-        self.config_file = os.path.join(self.temp_dir, 'anthropic_config.yml')
-        self.test_key = "test-api-key"
-        
-        # Create test config file
-        with open(self.config_file, 'w') as f:
-            yaml.dump({'api_key': base64.b64encode(self.test_key.encode('utf-8')).decode('utf-8')}, f)
-        
-        # Create test source files
-        self.source_dir = os.path.join(self.temp_dir, 'test_source')
-        os.makedirs(self.source_dir)
-        with open(os.path.join(self.source_dir, 'test.py'), 'w') as f:
-            f.write('def test_function():\n    return "test"')
-        
-        # Set up Anthropic client
-        self.client = Anthropic(api_key=self.test_key)
+# Load environment variables
+load_dotenv()
 
-    def tearDown(self):
-        """Clean up test environment"""
-        import shutil
-        shutil.rmtree(self.temp_dir)
+# Configure logging
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+logger = logging.getLogger(__name__)
 
-    def test_anthropic_client(self):
-        """Test Anthropic client initialization"""
-        self.assertIsInstance(self.client, Anthropic)
-        self.assertEqual(self.client.api_key, self.test_key)
+def load_knowledge_base():
+    """Load the knowledge base content"""
+    try:
+        kb_path = Path("knowledge-base/all.txt")
+        return kb_path.read_text(encoding='utf-8')
+    except Exception as e:
+        logger.error(f"Error loading knowledge base: {e}")
+        raise
 
-    def test_concatenate_sources(self):
-        """Test source file concatenation"""
-        def concatenate_sources(source_dirs):
-            content = ""
-            for dir_path in source_dirs:
-                for root, _, files in os.walk(dir_path):
-                    for file in files:
-                        file_path = os.path.join(root, file)
-                        with open(file_path, 'r') as f:
-                            content += f"# {file_path}\n{f.read()}\n\n"
-            return content
+def test_claude_queries():
+    """Test Claude's responses to various queries"""
+    
+    # Initialize Claude
+    client = anthropic.Anthropic(api_key=os.getenv('CLAUDE_KEY'))
+    
+    # Load knowledge base
+    logger.info("Loading knowledge base...")
+    knowledge_base = load_knowledge_base()
+    logger.info("Knowledge base loaded successfully")
 
-        result = concatenate_sources([self.source_dir])
-        self.assertIn('test_function', result)
-        self.assertIn('return "test"', result)
+    # Test queries
+    test_queries = [
+        "What is ApeWorX?",
+        "Write a simple Silverback bot",
+        "How do I deploy a smart contract with Ape?",
+    ]
 
-    @patch('anthropic.resources.messages.Messages.create')
-    def test_send_prompt(self, mock_create):
-        """Test sending prompt to Anthropic API"""
-        # Mock API response
-        mock_response = MagicMock()
-        mock_response.content = [MagicMock(text="Test response")]
-        mock_create.return_value = mock_response
+    system_prompt = """You are a technical assistant for ApeWorX, specializing in smart contract development and blockchain tooling.
+Use ONLY the provided documentation to answer questions.
+If the answer cannot be found in the documentation, say so clearly."""
 
-        # Test data
-        test_content = "Test content"
-        test_prompt = "Test prompt"
-        
-        # Send prompt
-        response = self.client.messages.create(
-            model="claude-3-opus-20240229",
-            max_tokens=1000,
-            messages=[{
-                "role": "user",
-                "content": f"{test_prompt}\n\n{test_content}"
-            }]
-        )
-        
-        # Verify response
-        self.assertEqual(response.content[0].text, "Test response")
-        mock_create.assert_called_once()
+    for query in test_queries:
+        print("\n" + "="*80)
+        print(f"\nTesting query: {query}")
+        print("="*80)
 
-    @patch('anthropic.resources.messages.Messages.create')
-    def test_api_error(self, mock_create):
-        """Test API error handling"""
-        mock_create.side_effect = Exception("API Error")
-        
-        with self.assertRaises(Exception) as context:
-            self.client.messages.create(
+        try:
+            # Construct full prompt
+            full_prompt = f"""Documentation:
+{knowledge_base}
+
+Question: {query}
+
+Please provide a clear and specific answer based solely on the documentation provided."""
+
+            print("\nPrompt sent to Claude:")
+            print("-"*40)
+            print(full_prompt)
+            print("-"*40)
+
+            # Get Claude's response using correct message structure
+            response = client.messages.create(
                 model="claude-3-opus-20240229",
-                max_tokens=1000,
-                messages=[{"role": "user", "content": "test"}]
+                max_tokens=2000,
+                temperature=0,
+                system=system_prompt,  # System prompt goes here
+                messages=[
+                    {"role": "user", "content": full_prompt}  # Only user message in the messages array
+                ]
             )
-        
-        self.assertEqual(str(context.exception), "API Error")
 
-    def test_environment_config(self):
-        """Test environment configuration"""
-        with patch.dict(os.environ, {'CLAUDE_KEY': self.test_key}):
-            client = Anthropic(api_key=os.getenv('CLAUDE_KEY'))
-            self.assertEqual(client.api_key, self.test_key)
+            print("\nClaude's response:")
+            print("-"*40)
+            print(response.content[0].text)
+            print("-"*40)
 
-if __name__ == '__main__':
-    unittest.main()
+        except Exception as e:
+            logger.error(f"Error processing query '{query}': {e}")
+            print(f"Error: {e}")
+
+if __name__ == "__main__":
+    print("\nStarting Claude test...")
+    try:
+        test_claude_queries()
+        print("\nTest completed")
+    except Exception as e:
+        print(f"\nTest failed: {e}")
