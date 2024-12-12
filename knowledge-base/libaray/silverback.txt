@@ -1,0 +1,659 @@
+# Developing Bots
+
+In this guide, we are going to show you more details on how to build an bot with Silverback.
+
+## Prerequisites
+
+You should have a python project with Silverback installed.
+You can install Silverback via `pip install silverback`
+
+## Project structure
+
+There are 3 suggested ways to structure your project. In the root directory of your project:
+
+1. Create a `bot.py` file. This is the simplest way to define your bot project.
+
+2. Create a `bots/` folder. Then develop bots in this folder as separate scripts (Do not include a __init__.py file).
+
+3. Create a `bot/` folder with a `__init__.py` file that will include the instantiation of your `SilverbackBot()` object.
+
+The `silverback` cli automatically searches for python scripts to run as bots in specific locations relative to the root of your project.
+It will also be able to detect the scripts inside your `bots/` directory and let you run those by name (in case you have multiple bots in your project).
+
+If `silverback` finds a module named `bot` in the root directory of the project, then it will use that by default.
+
+```{note}
+It is suggested that you create the instance of your `SilverbackBot()` object by naming the variable `bot`, since `silverback` will autodetect that variable name when loading your script file.
+```
+
+Another way you can structure your bot is to create a `bot` folder and define a runner inside of that folder as `__init__.py`.
+
+If you have a more complicated project that requires multiple bots, naming each bot their own individual name is okay to do, and we encourage you to locate them under the `bots/` folder relative to the root of your project.
+This will work fairly seamlessly with the rest of the examples shown in this guide.
+
+To run a bot, as long as your project directory follows the suggestions above by using a `bot` module, you can run it easily with:
+
+```bash
+silverback run --network your:network:of:choice
+```
+
+If your bot's module name is `example.py` (for example), you can run it like this:
+
+```bash
+silverback run example --network your:network:of:choice
+```
+
+If the variable that you call the `SilverbackBot()` object is something other than `bot`, you can specific that by adding `:{variable-name}`:
+
+```bash
+silverback run example:my_bot --network your:network:of:choice
+```
+
+We will automatically detect all scripts under the `bots/` folder automatically, but if your bot resides in a location other than `bots/` then you can use this to run it:
+
+```bash
+silverback run folder.example:bot --network your:network:of:choice
+```
+
+Note that with a `bot/__init__.py` setup, silverback will also autodetect it, and you can run it with:
+
+```bash
+silverback run --network your:network:of:choice
+```
+
+```{note}
+It is suggested that you develop your bots as scripts to keep your deployments simple.
+If you have a deep understanding of containerization, and have specific needs, you can set your bots up however you'd like, and then create your own container definitions for deployments to publish to your reqistry of choice.
+For the most streamlined experience, develop your bots as scripts, and avoid relying on local packages
+(e.g. do not include an `__init__.py` file inside your `bots/` directory, and do not use local modules inside `bots/` for reusable code).
+If you follow these suggestions, your Silverback deployments will be easy to use and require almost no thought.
+```
+
+## Creating a Bot
+
+Creating a Silverback Bot is easy, to do so initialize the `silverback.SilverbackBot` class:
+
+```py
+from silverback import SilverbackBot
+
+bot = SilverbackBot()
+```
+
+The `SilverbackBot` class handles state and configuration.
+Through this class, we can hook up event handlers to be executed each time we encounter a new block or each time a specific event is emitted.
+Initializing the bot creates a network connection using the Ape configuration of your local project, making it easy to add a Silverback bot to your project in order to perform automation of necessary on-chain interactions required.
+
+However, by default an bot has no configured event handlers, so it won't be very useful.
+This is where adding event handlers is useful via the `bot.on_` method.
+This method lets us specify which event will trigger the execution of our handler as well as which handler to execute.
+
+## New Block Events
+
+To add a block handler, you will do the following:
+
+```py
+from ape import chain
+
+@bot.on_(chain.blocks)
+def handle_new_block(block):
+    ...
+```
+
+Inside of `handle_new_block` you can define any logic that you want to handle each new `block` detected by the silverback client.
+You can return any serializable data structure from this function and that will be stored in the results database as a trackable metric for the execution of this handler.
+Any errors you raise during this function will get captured by the client, and recorded as a failure to handle this `block`.
+
+## New Event Logs
+
+Similarly to blocks, you can handle events emitted by a contract by adding an event handler:
+
+```
+from ape import Contract
+
+TOKEN = Contract(<your token address here>)
+
+@bot.on_(TOKEN.Transfer)
+def handle_token_transfer_events(transfer):
+    ...
+```
+
+Inside of `handle_token_transfer_events` you can define any logic that you want to handle each new `transfer` event that gets emitted by `TOKEN.Transfer` detected by the silverback client.
+Again, you can return any serializable data structure from this function and that will be stored in the results database as a trackable metric for the execution of this handler.
+Any errors you raise during this function will get captured by the client, and recorded as a failure to handle this `transfer` event log.
+
+## Startup and Shutdown
+
+### Worker Events
+
+If you have heavier resources you want to load during startup, or want to initialize things like database connections, you can add a worker startup function like so:
+
+```py
+@bot.on_worker_startup()
+def handle_on_worker_startup(state):
+    # Connect to DB, set initial state, etc
+    ...
+
+@bot.on_worker_shutdown()
+def handle_on_worker_shutdown(state):
+    # cleanup resources, close connections cleanly, etc
+    ...
+```
+
+This function comes a parameter `state` that you can use for storing the results of your startup computation or resources that you have provisioned.
+
+It's import to note that this is useful for ensuring that your workers (of which there can be multiple) have the resources necessary to properly handle any updates you want to make in your handler functions, such as connecting to the Telegram API, an SQL or NoSQL database connection, or something else.  **This function will run on every worker process**.
+
+*New in 0.2.0*: These events moved from `on_startup()` and `on_shutdown()` for clarity.
+
+#### Worker State
+
+The `state` variable is also useful as this can be made available to each handler method so other stateful quantities can be maintained for other uses.  Each distributed worker has its own instance of state.
+
+To access the state from a handler, you must annotate `context` as a dependency like so:
+
+```py
+from typing import Annotated
+from taskiq import Context, TaskiqDepends
+
+@bot.on_(chain.blocks)
+def block_handler(block, context: Annotated[Context, TaskiqDepends()]):
+    # Access state via context.state
+    ...
+```
+
+### Bot Events
+
+You can also add an bot startup and shutdown handler that will be **executed once upon every bot startup**.  This may be useful for things like processing historical events since the bot was shutdown or other one-time actions to perform at startup.
+
+```py
+@bot.on_startup()
+def handle_on_startup(startup_state):
+    # Process missed events, etc
+    # process_history(start_block=startup_state.last_block_seen)
+    # ...or startup_state.last_block_processed
+    ...
+
+
+@bot.on_shutdown()
+def handle_on_shutdown():
+    # Record final state, etc
+    ...
+```
+
+*Changed in 0.2.0*: The behavior of the `@bot.on_startup()` decorator and handler signature have changed.  It is now executed only once upon bot startup and worker events have moved on `@bot.on_worker_startup()`.
+
+## Bot State
+
+Sometimes it is very useful to have access to values in a shared state across your workers.
+For example you might have a value or complex reference type that you wish to update during one of your tasks, and read during another.
+Silverback provides `bot.state` to help with these use cases.
+
+For example, you might want to pre-populate a large dataframe into state on startup, keeping that dataframe in sync with the chain through event logs,
+and then use that data to determine a signal under which you want trigger transactions to commit back to the chain.
+Such an bot might look like this:
+
+```py
+@bot.on_startup()
+def create_table(startup_state):
+    df = contract.MyEvent.query(..., start_block=startup_state.last_block_processed)
+    ...  # Do some further processing on df
+    bot.state.table = df
+
+
+@bot.on_(contract.MyEvent)
+def update_table(log):
+    bot.state.table = ...  # Update using stuff from `log`
+
+
+@bot.on_(chain.blocks)
+def use_table(blk):
+    if bot.state.table[...].mean() > bot.state.table[...].sum():
+        # Trigger your bot to send a transaction from `bot.signer`
+        contract.myMethod(..., sender=bot.signer)
+    ...
+```
+
+```{warning}
+You can use `bot.state` to store any python variable type, however note that the item is not networked nor threadsafe so it is not recommended to have multiple tasks write to the same value in state at the same time.
+```
+
+```{note}
+Bot startup and bot runtime event triggers (e.g. block or event container) are handled distinctly and can be trusted not to execute at the same time.
+```
+
+### Signing Transactions
+
+If configured, your bot with have `bot.signer` which is an Ape account that can sign arbitrary transactions you ask it to.
+To learn more about signing transactions with Ape, see the [documentation](https://docs.apeworx.io/ape/stable/userguides/transactions.html).
+
+```{warning}
+While not recommended, you can use keyfile accounts for automated signing.
+See [this guide](https://docs.apeworx.io/ape/stable/userguides/accounts.html#automation) to learn more about how to do that.
+```
+
+## Running your Bot
+
+Once you have programmed your bot, it's really useful to be able to run it locally and validate that it does what you expect it to do.
+To run your bot locally, we have included a really useful cli command [`run`](../commands/run) that takes care of connecting to the proper network, configuring signers (using your local Ape accounts), and starting up the bot client and in-memory task queue workers.
+
+```sh
+# Run your bot on the Ethereum Sepolia testnet, with your own signer:
+$ silverback run my_bot --network :sepolia --account acct-name
+```
+
+```{note}
+`my_bot:bot` is not required for silverback run if you follow the suggested folder structure at the start of this page, you can just call it via `my_bot`.
+```
+
+It's important to note that signers are optional, if not configured in the bot then `bot.signer` will be `None`.
+You can use this in your bot to enable a "test execution" mode, something like this:
+
+```py
+# Compute some metric that might lead to creating a transaction
+if bot.signer:
+    # Execute a transaction via `sender=bot.signer`
+else:
+    # Log what the transaction *would* have done, had a signer been enabled
+```
+
+```{warning}
+If you configure your bot to use a signer, and that signer signs anything given to it, remember that you can lose substational amounts of funds if you deploy this to a production network.
+Always test your bots throughly before deploying, and always use a dedicated key for production signing with your bot in a remote setting.
+```
+
+```{note}
+It is highly suggested to use a dedicated cloud signer plugin, such as [`ape-aws`](https://github.com/ApeWorX/ape-aws) for signing transactions in a cloud environment.
+Use segregated keys and limit your risk by controlling the amount of funds that key has access to at any given time.
+```
+
+### Distributed Execution
+
+Using only the `silverback run ...` command in a default configuration executes everything in one process and the job queue is completely in-memory with a shared state.
+In some high volume environments, you may want to deploy your Silverback bot in a distributed configuration using multiple processes to handle the messages at a higher rate.
+
+The primary components are the client and workers.  The client handles Silverback events (blocks and contract event logs) and creates jobs for the workers to process in an asynchronous manner.
+
+For this to work, you must configure a [TaskIQ broker](https://taskiq-python.github.io/guide/architecture-overview.html#broker) capable of distributed processing.
+Additonally, it is highly suggested you should also configure a [TaskIQ result backend](https://taskiq-python.github.io/guide/architecture-overview.html#result-backend) in order to process and store the results of executing tasks.
+
+```{note}
+Without configuring a result backend, Silverback may not work as expected since your tasks will now suddenly return `None` instead of the actual result.
+```
+
+For instance, with [`taskiq_redis`](https://github.com/taskiq-python/taskiq-redis) you could do something like this for the client:
+
+```bash
+export SILVERBACK_BROKER_CLASS="taskiq_redis:ListQueueBroker"
+export SILVERBACK_BROKER_KWARGS='{"queue_name": "taskiq", "url": "redis://127.0.0.1:6379"}'
+export SILVERBACK_RESULT_BACKEND_CLASS="taskiq_redis:RedisAsyncResultBackend"
+export SILVERBACK_RESULT_BACKEND_URI="redis://127.0.0.1:6379"
+
+silverback run --network :mainnet:alchemy
+```
+
+And then the worker process with 2 worker subprocesses:
+
+```bash
+export SILVERBACK_BROKER_CLASS="taskiq_redis:ListQueueBroker"
+export SILVERBACK_BROKER_KWARGS='{"url": "redis://127.0.0.1:6379"}'
+export SILVERBACK_RESULT_BACKEND_CLASS="taskiq_redis:RedisAsyncResultBackend"
+export SILVERBACK_RESULT_BACKEND_URI="redis://127.0.0.1:6379"
+
+silverback worker -w 2
+```
+
+The client will send tasks to the 2 worker subprocesses, and all task queue and results data will be go through Redis.
+
+## Testing your Bot
+
+TODO: Add backtesting mode w/ `silverback test`
+
+## Deploying your Bot
+
+Check out the [Platform Deployment Userguide](./platform.html) for more information on how to deploy your bot to the [Silverback Platform](https://silverback.apeworx.io).
+# Deploying Bots
+
+In this guide, we are going to show you more details on how to deploy your application to the [Silverback Platform](https://silverback.apeworx.io).
+
+## Creating a Cluster
+
+The Silverback Platform runs your Bots on dedicated managed application Clusters.
+These Clusters will take care to orchestrate infrastructure, monitor, run your triggers, and collect metrics for your applications.
+Each Cluster is bespoke for an individual or organization, and isolates your applications from others on different infrastructure.
+
+Before we deploy our Bot, we have to create a Cluster.
+If you haven't yet, please sign up for Silverback at [https://silverback.apeworx.io](https://silverback.apeworx.io).
+
+Once you have signed up, you can actually create (and pay for) your Clusters from the Silverback CLI utility by first
+logging in to the Platform using [`silverback login`][silverback-login],
+and then using [`silverback cluster new`][silverback-cluster-new] to follow the steps necessary to deploy it.
+
+```{note}
+The Platform UI will let you create and manage Clusters using a graphical experience, which may be preferred.
+The CLI experience is for those working locally who don't want to visit the website, or are locally developing their applications.
+```
+
+Once you have created your Cluster, you have to fund it so it is made available for your use.
+To do that, use the [`silverback cluster pay create`][silverback-cluster-pay-create] command to fund your newly created cluster.
+Please note that provisioning your cluster will take time, and it may take up to an hour for it to be ready.
+Check back after 10-15 minutes using the [`silverback cluster info`][silverback-cluster-info] command to see when it's ready.
+
+At any point after the Cluster is funded, you can fund it with more funds via [`silverback cluster pay add-time`][silverback-cluster-pay-add-time]
+command to extend the timeline that the Cluster is kept around for.
+Note that it is possible for anyone to add more time to the Cluster, at any time and for any amount.
+
+If that timeline expires, the Platform will automatically de-provision your infrastructure, and it is not possible to reverse this!
+The Platform may send you notifications when your Stream is close to expiring, but it is up to you to remember to fill it so it doesn't.
+Note that your data collection will stay available for up to 30 days allowing you the ability to download any data you need.
+
+Lastly, if you ever feel like you no longer need your Cluster, you can cancel the funding for it and get a refund of the remaining funds.
+If you are the owner of the Stream, you can do this via the [`silverback cluster pay cancel`][silverback-cluster-pay-cancel] command.
+Only the owner may do this, so if you are not the owner you should contact them to have them do that action for you.
+
+## Connecting to your Cluster
+
+To connect to a cluster, you can use commands from the [`silverback cluster`][silverback-cluster] subcommand group.
+For instance, to list all your available bots on your cluster, use [`silverback cluster bots list`][silverback-cluster-bots-list].
+To obtain general information about your cluster, just use [`silverback cluster info`][silverback-cluster-info],
+or [`silverback cluster health`][silverback-cluster-health] to see the current status of your Cluster.
+
+If you have no bots, we will first have to containerize our Bots and upload them to a container registry that our Cluster is configured to access.
+
+```{note}
+Building a container for your application can be an advanced topic, we have included the `silverback build` subcommand to help assist in generating Dockerfiles.
+```
+
+## Building your Bot
+
+To build your container definition(s) for your bot(s), you can use the `silverback build` command. This command searches your `bots` directory for python modules, then auto-generates Dockerfiles.
+
+For example, if your directory is structured as suggested in [development](./development), and your `bots/` directory looks like this:
+
+```
+bots/
+├── botA.py
+├── botB.py
+├── botC.py
+```
+
+Then you can use `silverback build --generate` to generate 3 separate Dockerfiles for those bots, and start trying to build them.
+
+Those Dockerfiles will appear under `.silverback-images/` as follows:
+
+```bash
+silverback build --generate
+```
+
+This method will generate 3 Dockerfiles:
+
+```
+.silverback-images/
+├── Dockerfile.botA
+├── Dockerfile.botB
+├── Dockerfile.botC
+```
+
+You can retry you builds using the following (assuming you don't modify the structure of your project):
+
+```bash
+silverback build
+```
+
+You can then push your image to your registry using:
+
+```bash
+docker push your-registry-url/project/botA:latest
+```
+
+TODO: The ApeWorX team has github actions definitions for building, pushing and deploying.
+
+If you are unfamiliar with docker and container registries, you can use the \[\[github-action\]\].
+
+You do not need to build using this command if you use the github action, but it is there to help you if you are having problems figuring out how to build and run your bot images on the cluster successfully.
+
+TODO: Add how to debug containers using `silverback run` w/ `taskiq-redis` broker
+
+## Adding Environment Variables
+
+Once you have created your bot application container image, you might know of some environment variables the image requires to run properly.
+Thanks to it's flexible plugin system, ape plugins may also require specific environment variables to load as well.
+Silverback Clusters include an environment variable management system for exactly this purpose,
+which you can manage using [`silverback cluster vars`][silverback-cluster-vars] subcommand.
+
+The environment variable management system makes use of a concept called "Variable Groups" which are distinct collections of environment variables meant to be used together.
+These variable groups will help in managing the runtime environment of your Bots by allowing you to segregate different variables depending on each bot's needs.
+
+To create an environment group, use the [`silverback cluster vars new`][silverback-cluster-vars-new] command and give it a name and a set of related variables.
+For instance, it may make sense to make a group of variables for your favorite Ape plugins or services, such as RPC Providers, Blockchain Data Indexers, Etherscan, etc.
+You might have a database connection that you want all your bots to access.
+
+```{warning}
+All environment variables in Silverback Clusters are private, meaning they cannot be viewed after they are uploaded.
+However, your Bots will have full access to their values from within their runtime environment, so be careful that you fully understand what you are sharing with your bots.
+
+Also, understand your build dependencies within your container and make sure you are not using any vulnerable or malicious packages.
+
+**NEVER** upload your private key in a plaintext format!
+
+Use _Ape Account Plugins_ such as [`ape-aws`](https://github.com/ApeWorX/ape-aws) to safely manage access to your hosted keys.
+```
+
+```{note}
+The Etherscan plugin _will not function_ without an API key in the cloud environment.
+This will likely create errors running your applications if you use Ape's `Contract` class.
+```
+
+To list your Variable Groups, use [`silverback cluster vars list`][silverback-cluster-vars-list].
+To see information about a specific Variable Group, including the Environment Variables it includes, use [`silverback cluster vars info`][silverback-cluster-vars-info]
+To remove a variable group, use [`silverback cluster vars remove`][silverback-cluster-vars-remove],
+
+```{note}
+You can only remove a Variable Group if it is not referenced by any existing Bot.
+```
+
+Once you have created all the Variable Group(s) that you need to operate your Bot, you can reference these groups by name when adding your Bot to the cluster.
+
+## Private Container Registries
+
+If you are using a private container registry to store your images, you will need to provide your bot with the necessary credentials to access it.
+First you will need to add your credentials to the cluster with the [`silverback cluster registry auth new`][silverback-cluster-registry-auth-new] command.
+
+Then you can provide the name of these credentials when creating your bot with the [`silverback cluster bots new`][silverback-cluster-bots-new] or [`silverback cluster bots update`][silverback-cluster-bots-update] commands.
+
+## Deploying your Bot
+
+You are finally ready to deploy your bot on the Cluster and get it running!
+
+To deploy your Bot, use the [`silverback cluster bots new`][silverback-cluster-bots-new] command and give your bot a name,
+container image, network to run on, an account alias (if you want to sign transactions w/ `bot.signer`),
+and any environment Variable Group(s) the bot needs.
+If everything validates successfully, the Cluster will begin orchestrating your deployment for you.
+
+You should monitor the deployment and startup of your bot to make sure it enters the RUNNING state successfully.
+You can do this using the [`silverback cluster bots health`][silverback-cluster-bots-health] command.
+
+```{note}
+It usually takes a minute or so for your bot to transition from PROVISIONING to STARTUP to the RUNNING state.
+If there are any difficulties in downloading your container image, provisioning your desired infrastructure, or if your application encounters an error during the STARTUP phase,
+the Bot will not enter into the RUNNING state and will be shut down gracefully into the STOPPED state.
+
+Once in the STOPPED state, you can make any adjustments to the environment Variable Group(s) or other runtime parameters in the Bot config;
+or, you can make code changes and deploy a new image for the Bot to use.
+Once ready, you can use the `silverback cluster bots start` command to re-start your Bot.
+```
+
+If at any time you want to view the configuration of your bot, you can do so using the [`silverback cluster bots info`][silverback-cluster-bots-info] command.
+You can also update metadata or configuration of your bot using the [`silverback cluster bots update`][silverback-cluster-bots-update] command.
+Lastly, if you want to shutdown and delete your bot, you can do so using the [`silverback cluster bots remove`][silverback-cluster-bots-remove] command.
+
+```{note}
+Configuration updates do not redeploy your Bots automatically, you must manually stop and restart your bots for changes to take effect.
+```
+
+```{warning}
+Removing a Bot will immediately trigger a SHUTDOWN if the Bot is not already STOPPED.
+```
+
+## Monitoring your Bot
+
+Once your bot is successfully running in the RUNNING state, you can monitor your bot with a series of commands
+under the [`silverback cluster bots`][silverback-cluster-bots] subcommand group.
+We already saw how you can use the [`silverback cluster bots list`][silverback-cluster-bots-list] command to see all bots managed by your Cluster (running or not).
+
+To see runtime health information about a specific bot, again use the [`silverback cluster bots health`][silverback-cluster-bots-health] command.
+You can view the logs that a specific bot is generating using the [`silverback cluster bots logs`][silverback-cluster-bots-logs] command.
+Lastly, you can view unacknowledged errors that your bot has experienced while in the RUNNING state
+using the [`silverback cluster bots errors`][silverback-cluster-bots-errors] command.
+
+```{warning}
+Once in the RUNNING state, your Bot will not stop running unless it experiences a certain amount of errors in quick succession.
+Any task execution that experiences an error will abort execution (and therefore not produce any metrics) but the Bot **will not** shutdown.
+
+All errors encountered during task exeuction are reported to the Cluster for later review by any users with appriopiate access.
+Tasks do not retry (by default), but updates to `bot.state` are maintained up until the point an error occurs.
+
+It is important to keep track of these errors and ensure that none of them are in fact critical to the operation of your Bot,
+and to take corrective or preventative action if it is determined that it should be treated as a more critical failure condition.
+```
+
+```{note}
+Your Bots can also be monitored from the Platform UI at [https://silverback.apeworx.io](https://silverback.apeworx.io).
+```
+
+## Controlling your Bot
+
+As we already saw, once a Bot is configured in a Cluster, we can control it using commands from the [`silverback cluster bots`][silverback-cluster-bots] subcommand group.
+For example, we can attempt to start a Bot that is not currently running (after making configuration or code changes)
+using the [`silverback cluster bots start`][silverback-cluster-bots-start] command.
+We can also stop a bot using [`silverback cluster bots stop`][silverback-cluster-bots-stop] that is currently in the RUNNING state if we desire.
+
+```{note}
+Controlling your bots can be done from the Platform UI at [https://silverback.apeworx.io](https://silverback.apeworx.io), if you have the right permissions to do so.
+```
+===============
+SAMPLE CODE FOR BOTS BUILT WITH SILVERBACK AND ApeWorX
+
+```
+import os
+
+from ape import Contract, chain
+from silverback import SilverbackBot
+
+
+bot = SilverbackBot()
+
+vault = Contract(os.environ["ERC4626_VAULT_ADDRESS"])
+
+one_share = 10 ** vault.decimals()
+
+
+@bot.on_(chain.blocks)
+def update_shareprice(_):
+    """
+    Conver share to set price unit.
+    """
+    price = vault.convertToAssets(one_share) / one_share
+    # Total number of shares in the vault divide by 
+    # the current unit price of a share  = gwei 
+    print(f"Price Event: {price}")
+```
+
+```
+from math import log10, floor
+
+from ape import project
+from silverback import SilverbackApp
+from ape_farcaster import Warpcast
+import time
+
+import os
+import tempfile
+import requests
+
+from wonderwords import RandomWord
+
+STABILITY_KEY = os.environ.get("STABILITY_KEY")
+PINATA_API_KEY = os.environ.get("PINATA_API_KEY")
+PINATA_SECRET_API_KEY = os.environ.get("PINATA_SECRET_API_KEY")
+
+app = SilverbackApp()
+
+attempts = 0
+while attempts < 11:
+    try:
+        client = Warpcast(app.signer)
+        break
+    except Exception as e:
+        print(e)        
+        attempts+=1
+        time.sleep(1)
+        
+my_contract = project.Echo.at(os.environ.get("ECHO_CONTRACT"))
+
+def create_prompt(number_adj: int) -> str:
+    w = RandomWord()
+    adjectives = w.random_words(number_adj, include_categories=["adjective"])
+    adjectives_string = ", ".join(adjectives)
+    prompt = f"An {adjectives_string} ape that is screaming AHHHHH."
+    return prompt
+
+
+@app.on_(my_contract.Received)
+def payment_received(log):
+    print(log)
+    prompt = create_prompt(max(floor(log10(log.amount)) - 12, 1))
+    for _ in range(10):
+        print(f"\n{prompt}\n")
+        # create image from AI using scream
+        try:
+            fileName = createImage(prompt)
+            break
+        except Exception as e:
+            print(e)
+            prompt = create_prompt(max(floor(log10(log.amount)) - 12, 1))
+
+    # open the created image
+    print(fileName + " has beeen created")
+    image = open(fileName, 'rb')
+    # upload image to Pinata
+    ipfsHash = uploadToPinata(image)
+    # cast the message with the scream and ipfs link
+    ipfsLink = "https://jade-slow-pigeon-687.mypinata.cloud/ipfs/" + ipfsHash
+    warpcast_text = f"A picture of {log.sender}:\n"
+    client.post_cast(text=warpcast_text, embeds=[ipfsLink])
+
+
+def createImage(prompt):
+    response = requests.post(
+        "https://api.stability.ai/v2beta/stable-image/generate/ultra",
+        headers={
+            "authorization": STABILITY_KEY,
+            "accept": "image/*"
+        },
+        files={"none": ''},
+        data={
+            "prompt": prompt,
+            "output_format": "jpeg",
+        },
+    )
+    if response.status_code == 200:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".jpeg") as fp:
+            fp.write(response.content)
+    else:
+        raise Exception(str(response.json()))
+    return fp.name
+
+
+def uploadToPinata(image):
+    url = "https://api.pinata.cloud/pinning/pinFileToIPFS"
+    headers = {
+        'pinata_api_key': PINATA_API_KEY,
+        'pinata_secret_api_key': PINATA_SECRET_API_KEY,
+    }
+
+    files = {'file': ("ApeScream", image)}
+    response = requests.request("POST", url, files=files, headers=headers)
+    response.raise_for_status()
+    return response.json()["IpfsHash"]
+
+```

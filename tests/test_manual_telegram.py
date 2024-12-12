@@ -57,8 +57,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         knowledge_base = KnowledgeBaseCache.get_content()
         
         # Define system and user prompts
-        system_prompt = """You are a technical assistant for ApeWorX, specializing in smart contract development and blockchain tooling.
-Use ONLY the provided documentation to answer questions.
+        system_prompt = """You are a technical assistant for ApeWorX, specializing in smart contract
+        development and blockchain tooling. Use ONLY the provided documentation to answer questions.
 If the answer cannot be found in the documentation, say so clearly."""
 
         user_prompt = f"""Documentation:
@@ -112,7 +112,7 @@ def main():
     app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
     
     # Add message handler
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    app.add_handler(MessageHandler(filters.TEXT, handle_message))
     
     print("\nBot is running! 🚀")
     print("- Send any question to the ApeClaudeCouncil group")
